@@ -1,0 +1,2376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corso di Italiano - Firenze Study Hub</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            terracotta: {
+              DEFAULT: '#C85A32',
+              hover: '#B34D27',
+              light: '#F8ECE7',
+              dark: '#933B19'
+            },
+            gold: {
+              DEFAULT: '#D4A373',
+              light: '#F9F3EA',
+              dark: '#B07B47'
+            },
+            olive: {
+              DEFAULT: '#6B8E23',
+              light: '#EFF4E8',
+              dark: '#4C6618'
+            },
+            azzurro: {
+              DEFAULT: '#1C3F60',
+              hover: '#142F48',
+              light: '#EBF1F7',
+              dark: '#0F2438'
+            },
+            linen: {
+              DEFAULT: '#FDFBF7',
+              card: '#FFFFFF',
+              dark: '#F3EFE6'
+            }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FDFBF7;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #1C3F60;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F3EFE6;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D4A373;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #C85A32;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Subtle pulse glow for active individual bookmark */
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 4px 20px rgba(200, 90, 50, 0.12); }
+      50% { box-shadow: 0 6px 28px rgba(200, 90, 50, 0.25); }
+    }
+    .bookmark-card {
+      animation: pulseGlow 4s infinite ease-in-out;
+    }
+
+    .badge-cefr {
+      background: linear-gradient(135deg, #1C3F60 0%, #2B5B84 100%);
+    }
+
+    /* Folder tab styling */
+    .folder-tab-active {
+      background-color: #FFFFFF;
+      border-color: #C85A32;
+      box-shadow: 0 4px 12px rgba(28, 63, 96, 0.08);
+      transform: translateY(-2px);
+    }
+    .folder-tab-inactive {
+      background-color: #F3EFE6;
+      border-color: rgba(212, 163, 115, 0.45);
+      opacity: 0.88;
+    }
+    .folder-tab-inactive:hover {
+      background-color: #FFFFFF;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-16">
+
+  <!-- TOP HEADER -->
+  <header class="bg-azzurro border-b-4 border-gold shadow-md text-white sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
+
+      <!-- Logo & Brand Title -->
+      <div class="flex items-center space-x-3 min-w-0">
+        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-terracotta flex items-center justify-center text-xl sm:text-2xl text-white font-serif font-bold border-2 border-gold shadow shrink-0">
+          🇮🇹
+        </div>
+        <div class="min-w-0">
+          <h1 class="text-lg sm:text-2xl font-serif font-bold tracking-tight text-white flex items-center gap-2 truncate">
+            Corso di Italiano
+            <span class="text-[10px] sm:text-xs font-sans font-semibold uppercase tracking-widest bg-gold text-azzurro-dark px-2.5 py-0.5 rounded-full shrink-0">
+              Firenze Study Hub
+            </span>
+          </h1>
+          <p class="text-xs text-gold-light opacity-90 hidden sm:block truncate">
+            Pastas Individuais de Estudo • Progresso Isolado & Comparativo da Turma
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Buttons Header -->
+      <div class="flex items-center space-x-2 shrink-0">
+        <!-- Smart Sync & Export Modal Button -->
+        <button onclick="openSyncModal()" class="bg-gold hover:bg-gold-dark text-azzurro-dark font-bold text-xs sm:text-sm px-3 sm:px-4 py-2.5 rounded-xl transition duration-150 flex items-center gap-2 shadow">
+          <i class="fa-solid fa-folder-tree"></i>
+          <span class="hidden md:inline">Sincronizar / Exportar</span>
+          <span class="md:hidden">Sync</span>
+        </button>
+
+        <!-- Export CSV for Google Sheets -->
+        <button onclick="exportCSV()" title="Exportar Planilha (.csv) para Google Sheets com todos os membros" class="bg-olive hover:bg-olive-dark text-white font-semibold text-xs sm:text-sm px-3 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow">
+          <i class="fa-solid fa-file-csv"></i>
+          <span class="hidden lg:inline">Sheets (.csv)</span>
+        </button>
+
+        <!-- Reset Data -->
+        <button onclick="openResetConfirmModal()" title="Restaurar dados de demonstração" class="bg-white/10 hover:bg-red-900/50 text-red-200 text-xs sm:text-sm p-2.5 rounded-xl border border-white/15 transition">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MEMBER FOLDERS BAR (PASTAS INDIVIDUAIS POR MEMBRO) -->
+  <section class="bg-linen-dark border-b border-gold/40 pt-4 pb-4 shadow-inner">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+
+      <!-- Folder Bar Header & Management Controls -->
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span class="bg-azzurro text-gold text-xs font-bold px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+            <i class="fa-solid fa-folder-open"></i> PASTAS DOS INTEGRANTES
+          </span>
+          <span class="text-xs text-azzurro/75 hidden sm:inline">
+            Selecione sua pasta abaixo — suas alterações ficam isoladas apenas no seu perfil.
+          </span>
+        </div>
+
+        <!-- Folder Management Buttons -->
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <button onclick="openAddMemberModal()" class="bg-terracotta hover:bg-terracotta-hover text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-user-plus"></i> + Adicionar Membro
+          </button>
+          <button onclick="openRenameMemberModal()" class="bg-white hover:bg-gold-light text-azzurro border border-gold/50 text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+            <i class="fa-solid fa-pen"></i> Renomear Pasta
+          </button>
+          <button onclick="openDeleteMemberModal()" class="bg-white hover:bg-red-50 text-red-700 border border-red-200 text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+            <i class="fa-solid fa-trash-can"></i> Excluir Pasta
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable Folder Tabs List -->
+      <div id="member-folders-bar" class="flex items-stretch gap-3 overflow-x-auto pt-1 pb-1 no-scrollbar">
+        <!-- Rendered dynamically via JS -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+
+    <!-- ACTIVE FOLDER CONTEXT BANNER + NAVIGATION TABS -->
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-gold/40 pb-3">
+      
+      <!-- Navigation Tabs -->
+      <div class="flex overflow-x-auto space-x-1 sm:space-x-2 no-scrollbar">
+        <button onclick="switchTab('lessons')" id="tab-btn-lessons" class="py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 bg-terracotta text-white shadow-sm whitespace-nowrap transition">
+          <i class="fa-solid fa-book-open"></i> Meu Plano & Lições
+        </button>
+        <button onclick="switchTab('schedule')" id="tab-btn-schedule" class="py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 bg-white text-azzurro hover:bg-gold-light border border-gold/30 whitespace-nowrap transition">
+          <i class="fa-solid fa-calendar-week"></i> Cronograma Semanal
+        </button>
+        <button onclick="switchTab('group')" id="tab-btn-group" class="py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 bg-white text-azzurro hover:bg-gold-light border border-gold/30 whitespace-nowrap transition">
+          <i class="fa-solid fa-users-viewfinder"></i> Visão Geral da Turma (Comparativo)
+        </button>
+        <button onclick="switchTab('vocabulary')" id="tab-btn-vocabulary" class="py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 bg-white text-azzurro hover:bg-gold-light border border-gold/30 whitespace-nowrap transition">
+          <i class="fa-solid fa-language"></i> Glossário & Áudio
+        </button>
+        <button onclick="switchTab('notes')" id="tab-btn-notes" class="py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 bg-white text-azzurro hover:bg-gold-light border border-gold/30 whitespace-nowrap transition">
+          <i class="fa-solid fa-note-sticky"></i> Anotações & Tarefas
+        </button>
+      </div>
+
+      <!-- Active Folder Indicator Pill -->
+      <div id="active-folder-pill" class="self-start lg:self-auto bg-white border border-gold/50 px-3.5 py-2 rounded-xl flex items-center gap-2 text-xs shadow-sm shrink-0">
+        <span class="w-2.5 h-2.5 rounded-full bg-olive animate-pulse"></span>
+        <span class="text-gray-500">Pasta Ativa:</span>
+        <strong id="active-folder-name-label" class="text-azzurro font-bold">Integrante 1 (Você)</strong>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 1: MEU PLANO & LIÇÕES (INDIVIDUAL DO MEMBRO ATIVO)                -->
+    <!-- ===================================================================== -->
+    <section id="tab-lessons" class="space-y-6">
+
+      <!-- 1. BANNER PERSISTENTE "ONDE PAREI (MARCADOR INDIVIDUAL)" -->
+      <div class="bg-white border-2 border-terracotta/40 rounded-2xl p-5 sm:p-6 shadow-lg bookmark-card relative overflow-hidden">
+        <!-- Italian Flag Ribbon Accent -->
+        <div class="absolute top-0 right-0 h-full w-2 flex">
+          <div class="w-1/3 bg-green-600"></div>
+          <div class="w-1/3 bg-white"></div>
+          <div class="w-1/3 bg-red-600"></div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <!-- Left Info -->
+          <div class="space-y-3 flex-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="bg-terracotta text-white font-bold text-xs uppercase px-3 py-1 rounded-full tracking-wider flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-bookmark text-gold"></i> ONDE PAREI • MARCADOR DE <span id="bm-owner-badge" class="underline">INTEGRANTE 1</span>
+              </span>
+              <span id="bm-module-badge" class="bg-linen-dark text-azzurro font-semibold text-xs px-2.5 py-1 rounded-md border border-gold/40">
+                Módulo --
+              </span>
+              <span id="bm-updated-at" class="text-xs text-gray-500 italic">
+                Atualizado recentemente
+              </span>
+            </div>
+
+            <div>
+              <h2 id="bm-lesson-title" class="text-xl sm:text-2xl font-serif font-bold text-azzurro">
+                Carregando marcador individual...
+              </h2>
+              <div class="flex flex-wrap items-center gap-3 mt-1.5 text-sm font-semibold text-terracotta">
+                <span class="flex items-center gap-1.5 bg-terracotta-light px-3 py-1 rounded-lg">
+                  <i class="fa-solid fa-map-pin text-terracotta"></i>
+                  <span id="bm-location">Pág. --</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Personal Note Box -->
+            <div class="bg-linen rounded-xl p-3.5 border-l-4 border-gold text-sm text-azzurro/90 flex items-start gap-3">
+              <i class="fa-solid fa-pen-nib text-terracotta mt-0.5 text-base"></i>
+              <div>
+                <span class="font-bold text-[11px] uppercase text-terracotta block tracking-wider">Observação Pessoal do Ponto de Parada:</span>
+                <p id="bm-note" class="italic mt-0.5 font-sans text-xs sm:text-sm">Nenhuma observação registrada.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Action Controls -->
+          <div class="flex flex-row lg:flex-col items-center justify-end gap-2.5 min-w-[215px] border-t lg:border-t-0 lg:border-l border-gray-200 pt-4 lg:pt-0 lg:pl-6">
+            <button onclick="openEditBookmarkModal()" class="w-full bg-terracotta hover:bg-terracotta-hover text-white font-semibold text-xs sm:text-sm px-4 py-3 rounded-xl transition shadow flex items-center justify-center gap-2">
+              <i class="fa-solid fa-pen-to-square"></i> Editar Onde Parei
+            </button>
+            <button onclick="jumpToCurrentLesson()" class="w-full bg-azzurro hover:bg-azzurro-hover text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-arrow-down-long text-gold"></i> Ir para esta Lição
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. KPI CARDS DE EVOLUÇÃO AUTOMATIZADA (INDIVIDUAL) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <!-- Card 1: Progresso Geral -->
+        <div class="bg-white rounded-2xl p-5 border border-gold/30 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center justify-between pb-2">
+            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Progresso na Pasta</span>
+            <div class="w-9 h-9 rounded-xl bg-terracotta/10 text-terracotta flex items-center justify-center text-lg">
+              <i class="fa-solid fa-chart-pie"></i>
+            </div>
+          </div>
+          <div class="flex items-baseline justify-between">
+            <span id="kpi-percentage" class="text-3xl font-bold font-serif text-azzurro">0%</span>
+            <span id="kpi-status-tag" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-terracotta-light text-terracotta">Em Andamento</span>
+          </div>
+          <div class="w-full bg-gray-100 h-2.5 rounded-full mt-3 overflow-hidden">
+            <div id="kpi-progress-bar" class="bg-gradient-to-r from-terracotta to-gold h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Card 2: Aulas Concluídas vs Restantes -->
+        <div class="bg-white rounded-2xl p-5 border border-gold/30 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center justify-between pb-2">
+            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Aulas Concluídas</span>
+            <div class="w-9 h-9 rounded-xl bg-olive/10 text-olive flex items-center justify-center text-lg">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+          </div>
+          <div class="flex items-baseline justify-between">
+            <span id="kpi-lessons-count" class="text-3xl font-bold font-serif text-azzurro">0 / 18</span>
+            <span id="kpi-inprogress-count" class="text-xs font-semibold text-gold-dark bg-gold-light px-2 py-0.5 rounded">0 em curso</span>
+          </div>
+          <p id="kpi-lessons-remaining" class="text-xs text-gray-500 mt-3 font-medium">18 lições restantes para concluir</p>
+        </div>
+
+        <!-- Card 3: Horas de Estudo Acumuladas -->
+        <div class="bg-white rounded-2xl p-5 border border-gold/30 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center justify-between pb-2">
+            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Horas Acumuladas</span>
+            <div class="w-9 h-9 rounded-xl bg-gold/20 text-gold-dark flex items-center justify-center text-lg">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+          </div>
+          <div class="flex items-baseline justify-between">
+            <span id="kpi-hours" class="text-3xl font-bold font-serif text-azzurro">0h</span>
+            <span id="kpi-hours-total" class="text-xs text-gray-500">de 0h totais</span>
+          </div>
+          <p id="kpi-weekly-summary" class="text-xs text-olive-dark mt-3 font-medium flex items-center gap-1">
+            <i class="fa-solid fa-calendar-check"></i> Meta semanal: 180 min
+          </p>
+        </div>
+
+        <!-- Card 4: Nível Quadro Europeu (CEFR) Dinâmico -->
+        <div class="bg-white rounded-2xl p-5 border border-gold/30 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center justify-between pb-2">
+            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Nível CEFR Atual</span>
+            <div class="w-9 h-9 rounded-xl bg-azzurro/10 text-azzurro flex items-center justify-center text-lg">
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <span id="kpi-cefr-level" class="text-3xl font-bold font-serif text-terracotta">A1</span>
+              <span id="kpi-cefr-name" class="block text-xs font-semibold text-azzurro">Principiante</span>
+            </div>
+            <div class="badge-cefr text-gold px-3 py-1.5 rounded-lg text-[11px] font-bold border border-gold/30 text-center shadow">
+              Quadro<br>Europeu
+            </div>
+          </div>
+          <div class="flex items-center gap-1 mt-3 text-[10px] font-bold">
+            <span id="cefr-badge-A1" class="flex-1 text-center py-0.5 rounded bg-terracotta text-white">A1</span>
+            <span id="cefr-badge-A2" class="flex-1 text-center py-0.5 rounded bg-gray-100 text-gray-500">A2</span>
+            <span id="cefr-badge-B1" class="flex-1 text-center py-0.5 rounded bg-gray-100 text-gray-500">B1</span>
+            <span id="cefr-badge-B2" class="flex-1 text-center py-0.5 rounded bg-gray-100 text-gray-500">B2</span>
+            <span id="cefr-badge-C1" class="flex-1 text-center py-0.5 rounded bg-gray-100 text-gray-500">C1</span>
+            <span id="cefr-badge-C2" class="flex-1 text-center py-0.5 rounded bg-gray-100 text-gray-500">C2</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. FILTROS & BUSCA EM TEMPO REAL DAS LIÇÕES -->
+      <div class="bg-white p-4 rounded-2xl border border-gold/30 flex flex-col lg:flex-row gap-3 items-center justify-between shadow-sm">
+        <!-- Search Input -->
+        <div class="relative w-full lg:w-80">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+          <input type="text" id="lesson-search" oninput="renderLessons()" placeholder="Buscar lição, tema ou gramática..." class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-terracotta">
+        </div>
+
+        <!-- Filter Selects & Add Lesson -->
+        <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-end">
+          <select id="filter-module" onchange="renderLessons()" class="bg-linen border border-gray-200 text-azzurro text-xs rounded-xl px-3 py-2 font-semibold focus:outline-none focus:border-terracotta">
+            <option value="ALL">Todos os 5 Módulos</option>
+            <option value="1">Módulo 1: Fonética & Primeiros Passos</option>
+            <option value="2">Módulo 2: Conversação Inicial & Cotidiano</option>
+            <option value="3">Módulo 3: Estrutura Gramatical & Passado</option>
+            <option value="4">Módulo 4: Fluência Intermediária</option>
+            <option value="5">Módulo 5: Avançado & Cultura Florentina</option>
+          </select>
+
+          <select id="filter-level" onchange="renderLessons()" class="bg-linen border border-gray-200 text-azzurro text-xs rounded-xl px-3 py-2 font-semibold focus:outline-none focus:border-terracotta">
+            <option value="ALL">Todos os Níveis (A1-C2)</option>
+            <option value="A1">Nível A1</option>
+            <option value="A2">Nível A2</option>
+            <option value="B1">Nível B1</option>
+            <option value="B2">Nível B2</option>
+            <option value="C1">Nível C1</option>
+            <option value="C2">Nível C2</option>
+          </select>
+
+          <select id="filter-status" onchange="renderLessons()" class="bg-linen border border-gray-200 text-azzurro text-xs rounded-xl px-3 py-2 font-semibold focus:outline-none focus:border-terracotta">
+            <option value="ALL">Todos os Status</option>
+            <option value="completed">Concluídas</option>
+            <option value="in_progress">Em Andamento</option>
+            <option value="pending">Pendentes</option>
+          </select>
+
+          <button onclick="openAddLessonModal()" class="bg-olive hover:bg-olive-dark text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-plus"></i> Nova Lição Extra
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. LISTA DE MÓDULOS E 18+ LIÇÕES -->
+      <div id="modules-container" class="space-y-6">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 2: CRONOGRAMA DE APRENDIZADO SEMANAL (INDIVIDUAL)                 -->
+    <!-- ===================================================================== -->
+    <section id="tab-schedule" class="hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl border border-gold/30 shadow-sm space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-4">
+          <div>
+            <h3 class="text-xl font-serif font-bold text-azzurro flex items-center gap-2">
+              <i class="fa-solid fa-calendar-days text-terracotta"></i>
+              Cronograma Semanal de <span id="sched-owner-name" class="text-terracotta">Integrante 1</span>
+            </h3>
+            <p class="text-xs text-gray-500 mt-0.5">Organize seus dias, horários, foco de estudo e acompanhe sua constância semanal.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <!-- Weekly Goal Input -->
+            <div class="bg-linen px-3.5 py-2 rounded-xl border border-gold/40 flex items-center gap-2">
+              <label for="sched-goal-input" class="text-xs font-bold text-azzurro">Meta Semanal (min):</label>
+              <input type="number" id="sched-goal-input" min="15" step="15" onchange="updateWeeklyGoal(this.value)" class="w-20 bg-white border border-gray-300 rounded-lg px-2 py-1 text-xs font-bold text-terracotta text-center focus:outline-none focus:border-terracotta">
+            </div>
+
+            <!-- Reset Weekly Checkmarks -->
+            <button onclick="resetWeeklyChecks()" class="bg-azzurro hover:bg-azzurro-hover text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+              <i class="fa-solid fa-arrows-rotate"></i> Iniciar Nova Semana
+            </button>
+          </div>
+        </div>
+
+        <!-- Weekly Consistency Summary Bar -->
+        <div class="bg-linen p-4 rounded-xl border border-gold/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Constância na Semana Atual</span>
+            <div class="flex items-baseline gap-2">
+              <span id="sched-done-mins" class="text-2xl font-serif font-bold text-olive">0 min</span>
+              <span id="sched-planned-mins" class="text-xs text-gray-600">cumpridos de 180 min planejados</span>
+            </div>
+          </div>
+          <div class="flex-1 max-w-md">
+            <div class="flex justify-between text-xs font-bold text-azzurro mb-1">
+              <span>Progresso da Meta Semanal</span>
+              <span id="sched-goal-pct">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden">
+              <div id="sched-goal-bar" class="bg-gradient-to-r from-olive to-gold h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7-Day Grid (Segunda a Domingo) -->
+        <div id="schedule-days-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 3: VISÃO GERAL DA TURMA (COMPARATIVO LADO A LADO)                 -->
+    <!-- ===================================================================== -->
+    <section id="tab-group" class="hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl border border-gold/30 shadow-sm space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4">
+          <div>
+            <h3 class="text-xl font-serif font-bold text-azzurro flex items-center gap-2">
+              <i class="fa-solid fa-people-group text-terracotta"></i>
+              Visão Geral da Turma (Painel Comparativo)
+            </h3>
+            <p class="text-xs text-gray-500 mt-0.5">
+              Acompanhe o nível CEFR, percentual concluído, horas estudadas e onde cada integrante parou sem risco de editar outra pasta por engano.
+            </p>
+          </div>
+          <button onclick="openSyncModal()" class="bg-terracotta hover:bg-terracotta-hover text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm self-start">
+            <i class="fa-solid fa-file-import"></i> Importar / Mesclar Pasta de Colega
+          </button>
+        </div>
+
+        <!-- Side-by-Side Member Cards Grid -->
+        <div id="group-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Detailed Comparative Table -->
+        <div class="pt-2">
+          <h4 class="text-sm font-serif font-bold text-azzurro mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-table-list text-gold-dark"></i> Quadro Resumo de Desempenho & Pontos de Parada
+          </h4>
+          <div class="overflow-x-auto rounded-xl border border-gold/30">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-azzurro text-white uppercase tracking-wider text-[11px]">
+                  <th class="py-3 px-4">Integrante</th>
+                  <th class="py-3 px-3 text-center">Nível CEFR</th>
+                  <th class="py-3 px-4">Progresso</th>
+                  <th class="py-3 px-3 text-center">Aulas</th>
+                  <th class="py-3 px-3 text-center">Horas</th>
+                  <th class="py-3 px-4">Onde Parou (Marcador Individual)</th>
+                  <th class="py-3 px-3 text-right">Ação</th>
+                </tr>
+              </thead>
+              <tbody id="group-comparison-tbody" class="divide-y divide-gray-100 bg-white">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 4: GLOSSÁRIO ITALIANO COM ÁUDIO (WEB SPEECH API it-IT)            -->
+    <!-- ===================================================================== -->
+    <section id="tab-vocabulary" class="hidden space-y-6">
+      <div class="bg-white p-5 rounded-2xl border border-gold/30 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-lg font-serif font-bold text-azzurro">Glossário & Expressões Italianas com Pronúncia</h3>
+            <p class="text-xs text-gray-500">Clique no ícone de alto-falante para ouvir a pronúncia nativa em italiano (it-IT)</p>
+          </div>
+          <button onclick="openAddVocabModal()" class="bg-terracotta hover:bg-terracotta-hover text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow">
+            <i class="fa-solid fa-plus"></i> Adicionar Palavra / Expressão
+          </button>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="relative flex-1">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+            <input type="text" id="vocab-search" oninput="renderVocabulary()" placeholder="Pesquisar em italiano ou português..." class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-terracotta">
+          </div>
+          <select id="vocab-category-filter" onchange="renderVocabulary()" class="bg-linen border border-gray-200 text-azzurro text-xs rounded-xl px-3 py-2 font-semibold focus:outline-none focus:border-terracotta">
+            <option value="ALL">Todas as Categorias</option>
+            <option value="Expressão">Expressões Idiomáticas</option>
+            <option value="Conversação">Conversação</option>
+            <option value="Verbo">Verbos</option>
+            <option value="Vocabulário">Vocabulário Geral</option>
+            <option value="Gramática">Gramática</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="vocab-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 5: CADERNO DE ANOTAÇÕES & TAREFAS INDIVIDUAIS                     -->
+    <!-- ===================================================================== -->
+    <section id="tab-notes" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 bg-white p-5 rounded-2xl border border-gold/30 shadow-sm">
+        <div>
+          <h3 class="text-lg font-serif font-bold text-azzurro">
+            Caderno de Anotações & Tarefas de <span id="notes-owner-name" class="text-terracotta">Integrante 1</span>
+          </h3>
+          <p class="text-xs text-gray-500">Suas tarefas de casa, dúvidas gramaticais e links de estudo salvos exclusivamente na sua pasta.</p>
+        </div>
+        <button onclick="openAddNoteModal()" class="bg-azzurro hover:bg-azzurro-hover text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow self-start">
+          <i class="fa-solid fa-plus"></i> Nova Anotação / Tarefa
+        </button>
+      </div>
+
+      <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================================= -->
+  <!-- MODALS                                                                  -->
+  <!-- ======================================================================= -->
+
+  <!-- Modal 1: Editar Marcador Individual ("Onde Parei") -->
+  <div id="modal-bookmark" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border-2 border-terracotta space-y-5">
+      <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+        <h3 class="text-lg font-serif font-bold text-azzurro flex items-center gap-2">
+          <i class="fa-solid fa-bookmark text-terracotta"></i> Atualizar Meu Ponto de Parada
+        </h3>
+        <button onclick="closeEditBookmarkModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="saveBookmark(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Lição Atual</label>
+          <select id="bm-select-lesson" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Local Exato de Parada (Página / Minuto / Exercício)</label>
+          <input type="text" id="bm-input-location" required placeholder="Ex: Página 48, Exercício 4 (Vídeo em 18:35)" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Observação Pessoal para Próxima Sessão</label>
+          <textarea id="bm-input-note" rows="3" placeholder="Ex: Parei na explicação dos verbos irregulares. Revisar conjugação antes de continuar!" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-3 border-t border-gray-100">
+          <button type="button" onclick="closeEditBookmarkModal()" class="px-4 py-2 text-xs font-semibold text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200">Cancelar</button>
+          <button type="submit" class="px-5 py-2 text-xs font-semibold text-white bg-terracotta rounded-xl hover:bg-terracotta-hover shadow">Salvar na Minha Pasta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Adicionar / Renomear Pasta de Membro -->
+  <div id="modal-member" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-2 border-gold space-y-5">
+      <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+        <h3 id="modal-member-title" class="text-lg font-serif font-bold text-azzurro flex items-center gap-2">
+          <i class="fa-solid fa-folder-plus text-terracotta"></i> Nova Pasta de Integrante
+        </h3>
+        <button onclick="closeMemberModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="saveMemberFolder(event)" class="space-y-4">
+        <input type="hidden" id="member-modal-mode" value="add">
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nome do Integrante / Pasta</label>
+          <input type="text" id="member-name-input" required maxlength="32" placeholder="Ex: Giulia Rossi, Lucas, Integrante 4..." class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-2">Cor da Pasta / Avatar</label>
+          <div class="flex items-center gap-3" id="member-color-picker">
+            <label class="cursor-pointer">
+              <input type="radio" name="memberColor" value="#C85A32" checked class="sr-only peer">
+              <span class="w-8 h-8 rounded-full bg-[#C85A32] block ring-2 ring-offset-2 ring-transparent peer-checked:ring-azzurro transition"></span>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="memberColor" value="#1C3F60" class="sr-only peer">
+              <span class="w-8 h-8 rounded-full bg-[#1C3F60] block ring-2 ring-offset-2 ring-transparent peer-checked:ring-terracotta transition"></span>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="memberColor" value="#6B8E23" class="sr-only peer">
+              <span class="w-8 h-8 rounded-full bg-[#6B8E23] block ring-2 ring-offset-2 ring-transparent peer-checked:ring-azzurro transition"></span>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="memberColor" value="#B07B47" class="sr-only peer">
+              <span class="w-8 h-8 rounded-full bg-[#B07B47] block ring-2 ring-offset-2 ring-transparent peer-checked:ring-azzurro transition"></span>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="memberColor" value="#7C3AED" class="sr-only peer">
+              <span class="w-8 h-8 rounded-full bg-[#7C3AED] block ring-2 ring-offset-2 ring-transparent peer-checked:ring-azzurro transition"></span>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="memberColor" value="#0D9488" class="sr-only peer">
+              <span class="w-8 h-8 rounded-full bg-[#0D9488] block ring-2 ring-offset-2 ring-transparent peer-checked:ring-azzurro transition"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-3 border-t border-gray-100">
+          <button type="button" onclick="closeMemberModal()" class="px-4 py-2 text-xs font-semibold text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200">Cancelar</button>
+          <button type="submit" class="px-5 py-2 text-xs font-semibold text-white bg-terracotta rounded-xl hover:bg-terracotta-hover shadow">Salvar Pasta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Adicionar Lição Extra -->
+  <div id="modal-add-lesson" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-gold space-y-5">
+      <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+        <h3 class="text-lg font-serif font-bold text-azzurro">Adicionar Lição Extra na Pasta</h3>
+        <button onclick="closeAddLessonModal()" class="text-gray-400 hover:text-gray-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form onsubmit="saveCustomLesson(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Módulo</label>
+          <select id="new-lesson-module" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+            <option value="1">Módulo 1: Fonética, Alfabeto & Primeiros Passos (A1)</option>
+            <option value="2">Módulo 2: Conversação Inicial & Vida Cotidiana (A1/A2)</option>
+            <option value="3">Módulo 3: Estrutura Gramatical & Narrativa (A2/B1)</option>
+            <option value="4">Módulo 4: Fluência Intermediária & Expressividade (B1/B2)</option>
+            <option value="5">Módulo 5: Avançado & Cultura Florentina (C1/C2)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Título da Lição</label>
+          <input type="text" id="new-lesson-title" required placeholder="Ex: I Verbi Riflessivi e la Routine Quotidiana" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nível CEFR</label>
+            <select id="new-lesson-level" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+              <option value="A1">A1</option>
+              <option value="A2">A2</option>
+              <option value="B1">B1</option>
+              <option value="B2">B2</option>
+              <option value="C1">C1</option>
+              <option value="C2">C2</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Duração (minutos)</label>
+            <input type="number" id="new-lesson-duration" value="45" min="5" max="300" required class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Resumo / Foco Gramatical</label>
+          <input type="text" id="new-lesson-notes" placeholder="Ex: Exercícios práticos de conversação" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+        </div>
+
+        <div class="flex justify-end gap-3 pt-3 border-t border-gray-100">
+          <button type="button" onclick="closeAddLessonModal()" class="px-4 py-2 text-xs font-semibold text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200">Cancelar</button>
+          <button type="submit" class="px-5 py-2 text-xs font-semibold text-white bg-olive rounded-xl hover:bg-olive-dark shadow">Criar Lição</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Adicionar Vocabulário -->
+  <div id="modal-add-vocab" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-gold space-y-5">
+      <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+        <h3 class="text-lg font-serif font-bold text-azzurro">Nova Palavra / Expressão Italiana</h3>
+        <button onclick="closeAddVocabModal()" class="text-gray-400 hover:text-gray-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form onsubmit="saveCustomVocab(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Termo ou Frase em Italiano</label>
+          <input type="text" id="new-vocab-italian" required placeholder="Ex: Magari!" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Significado em Português</label>
+          <input type="text" id="new-vocab-portuguese" required placeholder="Ex: Quem dera! / Tomara! / Talvez" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Categoria</label>
+          <select id="new-vocab-category" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+            <option value="Expressão">Expressão Idiomática</option>
+            <option value="Conversação">Conversação</option>
+            <option value="Verbo">Verbo</option>
+            <option value="Vocabulário">Vocabulário Geral</option>
+            <option value="Gramática">Gramática</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Exemplo de Uso</label>
+          <textarea id="new-vocab-example" rows="2" placeholder="Ex: Vuoi andare a Firenze quest'estate? - Magari!" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-3 border-t border-gray-100">
+          <button type="button" onclick="closeAddVocabModal()" class="px-4 py-2 text-xs font-semibold text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200">Cancelar</button>
+          <button type="submit" class="px-5 py-2 text-xs font-semibold text-white bg-terracotta rounded-xl hover:bg-terracotta-hover shadow">Salvar no Glossário</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 5: Adicionar Anotação / Tarefa Individual -->
+  <div id="modal-add-note" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-gold space-y-5">
+      <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+        <h3 class="text-lg font-serif font-bold text-azzurro">Nova Anotação na Minha Pasta</h3>
+        <button onclick="closeAddNoteModal()" class="text-gray-400 hover:text-gray-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form onsubmit="saveCustomNote(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Título</label>
+          <input type="text" id="new-note-title" required placeholder="Ex: Exercícios de Preposições Articuladas" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Categoria</label>
+          <select id="new-note-category" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none">
+            <option value="Tarefa">Tarefa de Casa (Compiti)</option>
+            <option value="Dúvida">Dúvida para Revisar</option>
+            <option value="Recurso">Link / Material de Apoio</option>
+            <option value="Geral">Anotação Geral</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Detalhes</label>
+          <textarea id="new-note-text" rows="4" required placeholder="Escreva suas anotações pessoais..." class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:border-terracotta focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-3 border-t border-gray-100">
+          <button type="button" onclick="closeAddNoteModal()" class="px-4 py-2 text-xs font-semibold text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200">Cancelar</button>
+          <button type="submit" class="px-5 py-2 text-xs font-semibold text-white bg-azzurro rounded-xl hover:bg-azzurro-hover shadow">Salvar na Pasta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 6: Sincronização Inteligente por Pasta & Exportação -->
+  <div id="modal-sync" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border-2 border-gold space-y-5 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+        <h3 class="text-lg font-serif font-bold text-azzurro flex items-center gap-2">
+          <i class="fa-solid fa-folder-tree text-terracotta"></i> Sincronização Inteligente & Exportação
+        </h3>
+        <button onclick="closeSyncModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-5 text-xs text-gray-600">
+        <!-- Section A: Export Individual Member Folder -->
+        <div class="bg-linen p-4 rounded-xl border border-gold/40 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-azzurro uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-user-check text-terracotta"></i> 1. Exportar Apenas Minha Pasta (Sem Sobrescrever Colegas)
+            </span>
+            <span id="sync-active-member-badge" class="bg-terracotta text-white font-bold px-2.5 py-0.5 rounded-full text-[11px]">
+              Integrante 1
+            </span>
+          </div>
+          <p>
+            Baixe o arquivo <strong>.json</strong> exclusivo da pasta selecionada acima e envie no grupo da turma. Quando seus colegas importarem, apenas a sua pasta será atualizada no painel deles!
+          </p>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button onclick="exportActiveMemberFolder()" class="bg-terracotta hover:bg-terracotta-hover text-white font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm">
+              <i class="fa-solid fa-file-export"></i> Exportar Minha Pasta (.json)
+            </button>
+            <button onclick="copyActiveMemberJSON()" class="bg-white hover:bg-gold-light text-azzurro border border-gold/50 font-semibold px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5">
+              <i class="fa-solid fa-copy"></i> Copiar Código da Minha Pasta
+            </button>
+          </div>
+        </div>
+
+        <!-- Section B: Import & Merge Member Folder -->
+        <div class="bg-azzurro-light/60 p-4 rounded-xl border border-azzurro/20 space-y-3">
+          <span class="font-bold text-azzurro uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-code-merge text-olive"></i> 2. Importar / Mesclar Pasta de um Colega (.json)
+          </span>
+          <p>
+            Selecione o arquivo <strong>.json</strong> enviado por um integrante (ou cole o código abaixo). O sistema identifica o membro automaticamente e <strong>atualiza ou cria somente a pasta dele</strong>, mantendo todas as outras intactas!
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
+            <label class="cursor-pointer bg-azzurro hover:bg-azzurro-hover text-white font-bold px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
+              <i class="fa-solid fa-upload"></i> Escolher Arquivo (.json)
+              <input type="file" accept=".json,application/json" onchange="handleImportFile(event)" class="hidden">
+            </label>
+            <span class="text-gray-400 text-center hidden sm:inline">ou</span>
+            <input type="text" id="sync-paste-input" placeholder="Cole aqui o código JSON enviado pelo colega..." class="flex-1 bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs font-mono focus:border-terracotta focus:outline-none">
+            <button onclick="handleImportPastedJSON()" class="bg-olive hover:bg-olive-dark text-white font-bold px-4 py-2.5 rounded-xl transition shrink-0">
+              Mesclar
+            </button>
+          </div>
+        </div>
+
+        <!-- Section C: Full Workspace Backup & Google Sheets CSV -->
+        <div class="bg-white p-4 rounded-xl border border-gray-200 space-y-2.5">
+          <span class="font-bold text-azzurro uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-database text-gold-dark"></i> 3. Backup Completo & Planilha Google Sheets
+          </span>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button onclick="exportFullBackup()" class="bg-gold hover:bg-gold-dark text-azzurro-dark font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5">
+              <i class="fa-solid fa-download"></i> Backup Completo (.json)
+            </button>
+            <button onclick="exportCSV()" class="bg-olive hover:bg-olive-dark text-white font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5">
+              <i class="fa-solid fa-file-csv"></i> Exportar Planilha (.csv)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 7: Confirmação Customizada (Substitui window.confirm) -->
+  <div id="modal-confirm" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-2 border-terracotta space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-lg shrink-0">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div>
+          <h3 id="confirm-modal-title" class="text-base font-serif font-bold text-azzurro">Confirmar Ação</h3>
+          <p id="confirm-modal-message" class="text-xs text-gray-600 mt-1">Tem certeza que deseja continuar?</p>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-3 border-t border-gray-100">
+        <button onclick="closeConfirmModal()" class="px-4 py-2 text-xs font-semibold text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200">Cancelar</button>
+        <button id="confirm-modal-btn" class="px-4 py-2 text-xs font-semibold text-white bg-red-600 rounded-xl hover:bg-red-700 shadow">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ======================================================================= -->
+  <!-- JAVASCRIPT APPLICATION LOGIC                                            -->
+  <!-- ======================================================================= -->
+  <script>
+    const STORAGE_KEY = 'firenze_study_hub_folders_v1';
+
+    // 5 MÓDULOS ESTRUTURADOS E 18 LIÇÕES DETALHADAS DE ITALIANO (A1 A C2)
+    const MODULES_INFO = {
+      1: { title: "Módulo 1: Fonética, Alfabeto & Primeiros Passos", subtitle: "Pronúncia correta, saudações, números e gênero/número dos substantivos", level: "A1" },
+      2: { title: "Módulo 2: Conversação Inicial & Vida Cotidiana", subtitle: "Artigos, verbos auxiliares e regulares no presente e diálogos em cafés", level: "A1 / A2" },
+      3: { title: "Módulo 3: Estrutura Gramatical & Narrativa", subtitle: "Preposições articuladas, Passato Prossimo e Imperfetto para narrar histórias", level: "A2 / B1" },
+      4: { title: "Módulo 4: Fluência Intermediária & Expressividade", subtitle: "Pronomes combinados, partículas CI/NE, Futuro e Condizionale", level: "B1 / B2" },
+      5: { title: "Módulo 5: Avançado & Cultura Florentina", subtitle: "Congiuntivo, Período Hipotético, Renascimento e expressões toscanas", level: "C1 / C2" }
+    };
+
+    const BASE_LESSONS = [
+      // Módulo 1 (A1)
+      { id: 1, moduleId: 1, title: "L'Alfabeto e la Pronuncia Italiana (C, G, SC, GLI, GN)", duration: 45, level: "A1", category: "Fonética", notes: "Dominar os sons doces e duros antes de E/I e consoantes duplas." },
+      { id: 2, moduleId: 1, title: "Saluti, Presentazioni e Cortesia (Formale vs Informale)", duration: 40, level: "A1", category: "Conversação", notes: "Diferença entre dar del 'Tu' e dar del 'Lei' na Itália." },
+      { id: 3, moduleId: 1, title: "I Numeri, i Giorni, i Mesi e le Stagioni", duration: 45, level: "A1", category: "Vocabulário", notes: "Contagem de 0 a 1000, datas e expressões de tempo." },
+      { id: 4, moduleId: 1, title: "Sostantivi e Aggettivi: Genere e Numero (Singolare/Plurale)", duration: 50, level: "A1", category: "Gramática", notes: "Terminações regulares (-o/-i, -a/-e, -e/-i) e concordância." },
+
+      // Módulo 2 (A1/A2)
+      { id: 5, moduleId: 2, title: "Gli Articoli Determinativi e Indeterminativi (Il, Lo, La, Gli, Le)", duration: 50, level: "A1", category: "Gramática", notes: "Regras especiais para palavras iniciadas por vogal, z, s+consoante." },
+      { id: 6, moduleId: 2, title: "Verbi Ausiliari Essere e Avere al Presente Indicativo", duration: 60, level: "A1", category: "Gramática", notes: "Base fundamental para o presente e tempos compostos." },
+      { id: 7, moduleId: 2, title: "Verbi Regolari al Presente (-ARE, -ERE, -IRE e -ISC)", duration: 60, level: "A2", category: "Gramática", notes: "Conjugação das 3 famílias verbais e verbos incoativos (capire, preferire)." },
+      { id: 8, moduleId: 2, title: "Conversazione al Bar e al Ristorante: Ordinare a Firenze", duration: 45, level: "A2", category: "Conversação", notes: "Como pedir um espresso, cornetto, trattoria e pedir a conta." },
+
+      // Módulo 3 (A2/B1)
+      { id: 9, moduleId: 3, title: "Le Preposizioni Semplici e Articolate (di, a, da, in, con, su, per, tra)", duration: 75, level: "A2", category: "Gramática", notes: "Combinações obrigatórias (in + il = nel, a + la = alla, su + i = sui)." },
+      { id: 10, moduleId: 3, title: "Il Passato Prossimo con Avere e con Essere (Participio Passato)", duration: 70, level: "A2", category: "Gramática", notes: "Escolha do auxiliar correto e concordância de gênero/número com Essere." },
+      { id: 11, moduleId: 3, title: "L'Imperfetto Indicativo: Abitudini e Descrizioni nel Passato", duration: 60, level: "B1", category: "Gramática", notes: "Descrições de cenários, infância e ações habituais no passado." },
+      { id: 12, moduleId: 3, title: "Passato Prossimo vs Imperfetto: Raccontare Storie", duration: 65, level: "B1", category: "Conversação", notes: "Narrativa combinando ações pontuais e contexto contínuo." },
+
+      // Módulo 4 (B1/B2)
+      { id: 13, moduleId: 4, title: "I Pronomi Diretti, Indiretti e le Particelle CI e NE", duration: 75, level: "B1", category: "Gramática", notes: "Fluência na substituição de objetos e uso idiomático de Ci e Ne." },
+      { id: 14, moduleId: 4, title: "Il Futuro Semplice e il Futuro Anteriore (Progetti e Ipotesi)", duration: 60, level: "B2", category: "Gramática", notes: "Planos futuros e uso do futuro para expressar suposição no presente." },
+      { id: 15, moduleId: 4, title: "Il Condizionale Semplice e Composto (Desideri e Gentilezza)", duration: 65, level: "B2", category: "Conversação", notes: "Pedidos polidos (Vorrei, Potresti) e desejos não realizados." },
+
+      // Módulo 5 (C1/C2)
+      { id: 16, moduleId: 5, title: "Il Congiuntivo Presente, Passato, Imperfetto e Trapassato", duration: 85, level: "C1", category: "Gramática", notes: "Subjuntivo italiano para opiniões, dúvidas, emoções e hipóteses." },
+      { id: 17, moduleId: 5, title: "Il Periodo Ipotetico (Realtà, Possibilità e Impossibilità)", duration: 75, level: "C1", category: "Gramática", notes: "Construções condicionais avançadas com 'Se' nos 3 graus." },
+      { id: 18, moduleId: 5, title: "Cultura Fiorentina, Arte del Rinascimento e Modi di Dire Toscani", duration: 60, level: "C2", category: "Cultura", notes: "História de Florença, Dante Alighieri e expressões idiomáticas toscanas." }
+    ];
+
+    function createDefaultSchedule(activeDaysMap = {}) {
+      const days = [
+        { day: "Seg", fullDay: "Segunda-feira", active: true, time: "19:30", minutes: 45, focus: "Gramática & Exercícios", doneThisWeek: true },
+        { day: "Ter", fullDay: "Terça-feira", active: false, time: "", minutes: 0, focus: "Imersão passiva (Música/Podcast)", doneThisWeek: false },
+        { day: "Qua", fullDay: "Quarta-feira", active: true, time: "19:30", minutes: 45, focus: "Lição Principal & Áudio", doneThisWeek: true },
+        { day: "Qui", fullDay: "Quinta-feira", active: false, time: "", minutes: 0, focus: "", doneThisWeek: false },
+        { day: "Sex", fullDay: "Sexta-feira", active: true, time: "18:00", minutes: 45, focus: "Vocabulário & Pronúncia", doneThisWeek: false },
+        { day: "Sáb", fullDay: "Sábado", active: true, time: "10:00", minutes: 45, focus: "Revisão Semanal & Conversação", doneThisWeek: false },
+        { day: "Dom", fullDay: "Domingo", active: false, time: "", minutes: 0, focus: "Descanso", doneThisWeek: false }
+      ];
+      return days.map(d => ({ ...d, ...(activeDaysMap[d.day] || {}) }));
+    }
+
+    // ESTADO INICIAL COM 3 PASTAS DE EXEMPLO EDITÁVEIS
+    const INITIAL_STATE = {
+      activeMemberId: "member-1",
+      members: [
+        {
+          id: "member-1",
+          name: "Integrante 1 (Você)",
+          color: "#C85A32",
+          weeklyGoalMinutes: 180,
+          bookmark: {
+            lessonId: 7,
+            location: "Pág. 48, Exercício 4 (Vídeo em 18:35)",
+            note: "Revisar os verbos em -ISC (capire, preferire, finire) antes de iniciar os diálogos no café.",
+            updatedAt: new Date(Date.now() - 3600 * 1000 * 2).toISOString()
+          },
+          lessonStatuses: {
+            1: "completed", 2: "completed", 3: "completed",
+            4: "completed", 5: "completed", 6: "completed",
+            7: "in_progress"
+          },
+          customLessons: [],
+          schedule: createDefaultSchedule(),
+          notes: [
+            { id: 101, title: "Dúvida: Uso de 'Lo' vs 'Il'", text: "Lembrar que 'lo' é usado antes de s+consoante (lo studente), z (lo zaino), gn, ps.", category: "Dúvida", completed: false, date: "13/11/2026" },
+            { id: 102, title: "Tarefa: Diálogo no Café em Florença", text: "Escrever 6 frases pedindo espresso e cornetto usando 'Vorrei' e 'Per favore'.", category: "Tarefa", completed: true, date: "11/11/2026" }
+          ]
+        },
+        {
+          id: "member-2",
+          name: "Integrante 2",
+          color: "#1C3F60",
+          weeklyGoalMinutes: 200,
+          bookmark: {
+            lessonId: 10,
+            location: "Pág. 72, Tabela de Particípios Irregulares (Minuto 22:10)",
+            note: "Memorizar particípios irregulares principais: fatto, detto, scritto, letto, visto.",
+            updatedAt: new Date(Date.now() - 3600 * 1000 * 8).toISOString()
+          },
+          lessonStatuses: {
+            1: "completed", 2: "completed", 3: "completed", 4: "completed",
+            5: "completed", 6: "completed", 7: "completed", 8: "completed",
+            9: "completed", 10: "in_progress"
+          },
+          customLessons: [],
+          schedule: createDefaultSchedule({
+            "Seg": { active: true, time: "20:00", minutes: 50, focus: "Gramática Avançada", doneThisWeek: true },
+            "Ter": { active: true, time: "20:00", minutes: 50, focus: "Exercícios Escritos", doneThisWeek: true },
+            "Qua": { active: false, time: "", minutes: 0, focus: "", doneThisWeek: false },
+            "Qui": { active: true, time: "20:00", minutes: 50, focus: "Leitura & Áudio", doneThisWeek: true },
+            "Sex": { active: false, time: "", minutes: 0, focus: "", doneThisWeek: false },
+            "Sáb": { active: true, time: "09:30", minutes: 50, focus: "Simulado & Revisão", doneThisWeek: false }
+          }),
+          notes: [
+            { id: 201, title: "Verbos de Movimento com Essere", text: "Andare, venire, arrivare, partire, tornare sempre concordam em gênero e número no Passato Prossimo.", category: "Geral", completed: false, date: "12/11/2026" }
+          ]
+        },
+        {
+          id: "member-3",
+          name: "Integrante 3",
+          color: "#6B8E23",
+          weeklyGoalMinutes: 150,
+          bookmark: {
+            lessonId: 4,
+            location: "Pág. 26, Exercício de Plurais Irregulares (Minuto 09:45)",
+            note: "Praticar plural de palavras terminadas em -ca/-ga (amica -> amiche).",
+            updatedAt: new Date(Date.now() - 3600 * 1000 * 24).toISOString()
+          },
+          lessonStatuses: {
+            1: "completed", 2: "completed", 3: "completed", 4: "in_progress"
+          },
+          customLessons: [],
+          schedule: createDefaultSchedule({
+            "Seg": { active: true, time: "18:30", minutes: 50, focus: "Fonética & Vocabulário", doneThisWeek: true },
+            "Qua": { active: true, time: "18:30", minutes: 50, focus: "Gramática Básica", doneThisWeek: false },
+            "Sex": { active: false, time: "", minutes: 0, focus: "", doneThisWeek: false },
+            "Sáb": { active: true, time: "11:00", minutes: 50, focus: "Revisão da Semana", doneThisWeek: false }
+          }),
+          notes: [
+            { id: 301, title: "Treinar Alfabeto e Sons GLI / GN", text: "Repetir em voz alta palavras como 'famiglia', 'gnocchi', 'lasagna' e 'scegliere'.", category: "Tarefa", completed: false, date: "10/11/2026" }
+          ]
+        }
+      ],
+      vocabulary: [
+        { id: 1, italian: "In bocca al lupo!", portuguese: "Boa sorte! (Resposta tradicional: Crepi il lupo!)", category: "Expressão", example: "Domani ho l'esame di italiano. - In bocca al lupo!" },
+        { id: 2, italian: "Piacere di conoscerti", portuguese: "Prazer em te conhecer", category: "Conversação", example: "Ciao, sono Marco. Piacere di conoscerti!" },
+        { id: 3, italian: "Fare una passeggiata", portuguese: "Dar um passeio a pé", category: "Verbo", example: "Andiamo a fare una passeggiata lungo il fiume Arno a Firenze?" },
+        { id: 4, italian: "Magari!", portuguese: "Quem dera! / Tomara! / Talvez", category: "Expressão", example: "Andiamo in Toscana quest'estate? - Magari!" },
+        { id: 5, italian: "Comunque", portuguese: "De qualquer forma / No entanto", category: "Gramática", example: "Piove, ma comunque noi usciamo per un caffè." },
+        { id: 6, italian: "Vorrei un caffè macchiato, per favore", portuguese: "Eu gostaria de um café pingado, por favor", category: "Conversação", example: "Buongiorno! Vorrei un caffè macchiato e un cornetto alla crema." }
+      ]
+    };
+
+    let appState = {};
+    let currentTab = 'lessons';
+
+    // =========================================================================
+    // PERSISTENCE & HELPERS
+    // =========================================================================
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && Array.isArray(parsed.members) && parsed.members.length > 0) {
+            appState = parsed;
+            if (!appState.members.some(m => m.id === appState.activeMemberId)) {
+              appState.activeMemberId = appState.members[0].id;
+            }
+            return;
+          }
+        } catch (e) {
+          console.error("Erro ao carregar estado salvo:", e);
+        }
+      }
+      appState = JSON.parse(JSON.stringify(INITIAL_STATE));
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      updateUI();
+    }
+
+    function getActiveMember() {
+      let member = appState.members.find(m => m.id === appState.activeMemberId);
+      if (!member) {
+        member = appState.members[0];
+        appState.activeMemberId = member.id;
+      }
+      return member;
+    }
+
+    function getMemberAllLessons(member) {
+      return [...BASE_LESSONS, ...(member.customLessons || [])];
+    }
+
+    function calculateMemberStats(member) {
+      const allLessons = getMemberAllLessons(member);
+      const statuses = member.lessonStatuses || {};
+      const totalLessons = allLessons.length;
+      let completedCount = 0;
+      let inProgressCount = 0;
+      let totalMinutes = 0;
+      let completedMinutes = 0;
+
+      allLessons.forEach(lesson => {
+        const st = statuses[lesson.id] || 'pending';
+        const dur = Number(lesson.duration) || 45;
+        totalMinutes += dur;
+        if (st === 'completed') {
+          completedCount++;
+          completedMinutes += dur;
+        } else if (st === 'in_progress') {
+          inProgressCount++;
+        }
+      });
+
+      const percentage = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
+      const completedHours = (completedMinutes / 60).toFixed(1);
+      const totalHours = (totalMinutes / 60).toFixed(1);
+
+      // Dynamic CEFR calculation
+      let cefr = "A1";
+      let cefrName = "Principiante";
+      if (percentage >= 90) { cefr = "C2"; cefrName = "Maestria"; }
+      else if (percentage >= 75) { cefr = "C1"; cefrName = "Avançado"; }
+      else if (percentage >= 55) { cefr = "B2"; cefrName = "Interm. Superior"; }
+      else if (percentage >= 35) { cefr = "B1"; cefrName = "Intermediário"; }
+      else if (percentage >= 18) { cefr = "A2"; cefrName = "Elementare"; }
+
+      return {
+        allLessons,
+        totalLessons,
+        completedCount,
+        inProgressCount,
+        remainingCount: totalLessons - completedCount,
+        percentage,
+        completedHours,
+        totalHours,
+        cefr,
+        cefrName
+      };
+    }
+
+    function getInitials(name) {
+      const clean = (name || 'M').trim();
+      const parts = clean.split(/\s+/);
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      }
+      return clean.slice(0, 2).toUpperCase();
+    }
+
+    function escapeHTML(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // =========================================================================
+    // INITIALIZATION & MASTER UI DISPATCH
+    // =========================================================================
+    window.onload = function() {
+      loadState();
+      updateUI();
+    };
+
+    function updateUI() {
+      renderMemberFoldersBar();
+      renderActiveFolderBadges();
+      renderBookmark();
+      renderKPIs();
+      renderLessons();
+      renderSchedule();
+      renderGroupOverview();
+      renderVocabulary();
+      renderNotes();
+    }
+
+    // =========================================================================
+    // 1. RENDER MEMBER FOLDERS BAR (PASTAS INDIVIDUAIS)
+    // =========================================================================
+    function renderMemberFoldersBar() {
+      const container = document.getElementById('member-folders-bar');
+      const activeId = appState.activeMemberId;
+
+      container.innerHTML = appState.members.map(member => {
+        const isActive = member.id === activeId;
+        const stats = calculateMemberStats(member);
+        const initials = getInitials(member.name);
+
+        return `
+          <button
+            onclick="selectMemberFolder('${member.id}')"
+            class="min-w-[205px] max-w-[250px] text-left rounded-t-2xl rounded-b-xl border-2 p-3 transition-all duration-150 flex flex-col justify-between gap-2 shrink-0 ${isActive ? 'folder-tab-active' : 'folder-tab-inactive'}"
+          >
+            <div class="flex items-center justify-between gap-2 w-full">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-8 h-8 rounded-full text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-sm" style="background-color: ${member.color || '#C85A32'}">
+                  ${escapeHTML(initials)}
+                </div>
+                <div class="min-w-0">
+                  <div class="font-bold text-xs sm:text-sm text-azzurro truncate">
+                    ${escapeHTML(member.name)}
+                  </div>
+                  <span class="text-[10px] font-semibold ${isActive ? 'text-terracotta' : 'text-gray-500'} block">
+                    ${isActive ? '● Pasta Aberta' : 'Clique para abrir'}
+                  </span>
+                </div>
+              </div>
+              <span class="bg-azzurro text-gold text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0">
+                ${stats.cefr}
+              </span>
+            </div>
+
+            <!-- Mini Progress Bar -->
+            <div class="w-full space-y-1">
+              <div class="flex justify-between text-[10px] font-bold text-azzurro/80">
+                <span>${stats.completedCount}/${stats.totalLessons} aulas</span>
+                <span>${stats.percentage}%</span>
+              </div>
+              <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                <div class="h-full rounded-full transition-all duration-300" style="width: ${stats.percentage}%; background-color: ${member.color || '#C85A32'}"></div>
+              </div>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectMemberFolder(memberId) {
+      if (appState.activeMemberId === memberId) return;
+      appState.activeMemberId = memberId;
+      saveState();
+      const member = getActiveMember();
+      showToast(`Pasta "${member.name}" carregada!`);
+    }
+
+    function renderActiveFolderBadges() {
+      const member = getActiveMember();
+      document.getElementById('active-folder-name-label').innerText = member.name;
+      document.getElementById('bm-owner-badge').innerText = member.name.toUpperCase();
+      document.getElementById('sched-owner-name').innerText = member.name;
+      document.getElementById('notes-owner-name').innerText = member.name;
+    }
+
+    // =========================================================================
+    // 2. BOOKMARK ("ONDE PAREI" INDIVIDUAL)
+    // =========================================================================
+    function renderBookmark() {
+      const member = getActiveMember();
+      const allLessons = getMemberAllLessons(member);
+      const bm = member.bookmark || {};
+      const lesson = allLessons.find(l => l.id === bm.lessonId) || allLessons[0];
+      const modInfo = MODULES_INFO[lesson.moduleId] || { title: "Módulo Atual" };
+
+      document.getElementById('bm-module-badge').innerText = modInfo.title;
+      document.getElementById('bm-lesson-title').innerText = `Aula ${lesson.id}: ${lesson.title}`;
+      document.getElementById('bm-location').innerText = bm.location || `Início da Aula ${lesson.id}`;
+      document.getElementById('bm-note').innerText = bm.note || "Nenhuma observação pessoal registrada para este ponto.";
+
+      if (bm.updatedAt) {
+        const d = new Date(bm.updatedAt);
+        const formatted = isNaN(d) ? bm.updatedAt : d.toLocaleDateString('pt-BR', {
+          day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+        });
+        document.getElementById('bm-updated-at').innerText = `Atualizado em: ${formatted}`;
+      }
+    }
+
+    function setLessonAsBookmark(lessonId) {
+      const member = getActiveMember();
+      const allLessons = getMemberAllLessons(member);
+      const lesson = allLessons.find(l => l.id === lessonId);
+      if (!lesson) return;
+
+      member.bookmark = {
+        lessonId: lesson.id,
+        location: `Início da Aula ${lesson.id}: ${lesson.title}`,
+        note: member.bookmark && member.bookmark.lessonId === lesson.id
+          ? member.bookmark.note
+          : `Ponto de parada marcado na pasta de ${member.name}.`,
+        updatedAt: new Date().toISOString()
+      };
+
+      // Also automatically mark as in_progress if currently pending
+      if (!member.lessonStatuses[lesson.id] || member.lessonStatuses[lesson.id] === 'pending') {
+        member.lessonStatuses[lesson.id] = 'in_progress';
+      }
+
+      saveState();
+      showToast(`Marcador "Onde Parei" de ${member.name} atualizado!`);
+    }
+
+    function openEditBookmarkModal() {
+      const member = getActiveMember();
+      const allLessons = getMemberAllLessons(member);
+      const select = document.getElementById('bm-select-lesson');
+
+      select.innerHTML = allLessons.map(l => `
+        <option value="${l.id}" ${l.id === member.bookmark.lessonId ? 'selected' : ''}>
+          [Mód. ${l.moduleId} • ${l.level}] Aula ${l.id}: ${escapeHTML(l.title)}
+        </option>
+      `).join('');
+
+      document.getElementById('bm-input-location').value = member.bookmark.location || '';
+      document.getElementById('bm-input-note').value = member.bookmark.note || '';
+      document.getElementById('modal-bookmark').classList.remove('hidden');
+    }
+
+    function closeEditBookmarkModal() {
+      document.getElementById('modal-bookmark').classList.add('hidden');
+    }
+
+    function saveBookmark(e) {
+      e.preventDefault();
+      const member = getActiveMember();
+      const lessonId = Number(document.getElementById('bm-select-lesson').value);
+
+      member.bookmark = {
+        lessonId,
+        location: document.getElementById('bm-input-location').value.trim(),
+        note: document.getElementById('bm-input-note').value.trim(),
+        updatedAt: new Date().toISOString()
+      };
+
+      saveState();
+      closeEditBookmarkModal();
+      showToast(`Ponto de parada salvo na pasta de ${member.name}!`);
+    }
+
+    function jumpToCurrentLesson() {
+      switchTab('lessons');
+      const member = getActiveMember();
+      const row = document.getElementById(`lesson-row-${member.bookmark.lessonId}`);
+      if (row) {
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        row.classList.add('ring-2', 'ring-terracotta');
+        setTimeout(() => row.classList.remove('ring-2', 'ring-terracotta'), 2400);
+      }
+    }
+
+    // =========================================================================
+    // 3. KPIS & AUTOMATED METRICS
+    // =========================================================================
+    function renderKPIs() {
+      const member = getActiveMember();
+      const stats = calculateMemberStats(member);
+
+      document.getElementById('kpi-percentage').innerText = `${stats.percentage}%`;
+      document.getElementById('kpi-progress-bar').style.width = `${stats.percentage}%`;
+      document.getElementById('kpi-lessons-count').innerText = `${stats.completedCount} / ${stats.totalLessons}`;
+      document.getElementById('kpi-inprogress-count').innerText = `${stats.inProgressCount} em andamento`;
+      document.getElementById('kpi-lessons-remaining').innerText = `${stats.remainingCount} lições restantes para concluir`;
+      document.getElementById('kpi-hours').innerText = `${stats.completedHours}h`;
+      document.getElementById('kpi-hours-total').innerText = `de ${stats.totalHours}h totais`;
+      document.getElementById('kpi-weekly-summary').innerHTML = `<i class="fa-solid fa-calendar-check"></i> Meta semanal: ${member.weeklyGoalMinutes || 180} min`;
+
+      const statusTag = document.getElementById('kpi-status-tag');
+      if (stats.percentage === 100) {
+        statusTag.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-olive-light text-olive-dark";
+        statusTag.innerText = "Curso Concluído!";
+      } else if (stats.percentage >= 50) {
+        statusTag.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gold-light text-gold-dark";
+        statusTag.innerText = "Ritmo Forte";
+      } else {
+        statusTag.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-terracotta-light text-terracotta";
+        statusTag.innerText = "Em Andamento";
+      }
+
+      document.getElementById('kpi-cefr-level').innerText = stats.cefr;
+      document.getElementById('kpi-cefr-name').innerText = stats.cefrName;
+
+      ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].forEach(lvl => {
+        const badge = document.getElementById(`cefr-badge-${lvl}`);
+        if (!badge) return;
+        badge.className = lvl === stats.cefr
+          ? "flex-1 text-center py-0.5 rounded bg-terracotta text-white shadow"
+          : "flex-1 text-center py-0.5 rounded bg-gray-100 text-gray-500";
+      });
+    }
+
+    // =========================================================================
+    // 4. LESSONS & MODULES LIST (3-STATE STATUS: pending, in_progress, completed)
+    // =========================================================================
+    function renderLessons() {
+      const container = document.getElementById('modules-container');
+      const member = getActiveMember();
+      const allLessons = getMemberAllLessons(member);
+      const statuses = member.lessonStatuses || {};
+
+      const searchVal = (document.getElementById('lesson-search').value || '').toLowerCase();
+      const moduleFilter = document.getElementById('filter-module').value;
+      const levelFilter = document.getElementById('filter-level').value;
+      const statusFilter = document.getElementById('filter-status').value;
+
+      let html = '';
+
+      Object.keys(MODULES_INFO).forEach(modIdStr => {
+        const modId = Number(modIdStr);
+        if (moduleFilter !== 'ALL' && Number(moduleFilter) !== modId) return;
+
+        const modInfo = MODULES_INFO[modId];
+        const rawModLessons = allLessons.filter(l => l.moduleId === modId);
+        const totalMod = rawModLessons.length;
+        const doneMod = rawModLessons.filter(l => statuses[l.id] === 'completed').length;
+        const modPct = totalMod > 0 ? Math.round((doneMod / totalMod) * 100) : 0;
+
+        let filteredLessons = rawModLessons.filter(l => {
+          const st = statuses[l.id] || 'pending';
+          if (searchVal && !l.title.toLowerCase().includes(searchVal) && !(l.notes && l.notes.toLowerCase().includes(searchVal))) {
+            return false;
+          }
+          if (levelFilter !== 'ALL' && l.level !== levelFilter) return false;
+          if (statusFilter !== 'ALL' && st !== statusFilter) return false;
+          return true;
+        });
+
+        if (filteredLessons.length === 0 && (searchVal || moduleFilter !== 'ALL' || levelFilter !== 'ALL' || statusFilter !== 'ALL')) {
+          return;
+        }
+
+        html += `
+          <div class="bg-white rounded-2xl border border-gold/30 shadow-sm overflow-hidden">
+            <!-- Module Header -->
+            <div class="bg-linen p-4 sm:p-5 border-b border-gold/25 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="bg-azzurro text-gold font-bold text-xs px-2.5 py-0.5 rounded-full">${modInfo.level}</span>
+                  <h3 class="text-base sm:text-lg font-serif font-bold text-azzurro">${modInfo.title}</h3>
+                </div>
+                <p class="text-xs text-gray-500 mt-0.5">${modInfo.subtitle}</p>
+              </div>
+
+              <!-- Module Progress -->
+              <div class="flex items-center gap-3 min-w-[190px]">
+                <div class="flex-1 bg-gray-200 h-2 rounded-full overflow-hidden">
+                  <div class="bg-terracotta h-full rounded-full transition-all duration-300" style="width: ${modPct}%"></div>
+                </div>
+                <span class="text-xs font-bold text-azzurro whitespace-nowrap">${doneMod}/${totalMod} (${modPct}%)</span>
+              </div>
+            </div>
+
+            <!-- Lessons Rows -->
+            <div class="divide-y divide-gray-100">
+              ${filteredLessons.length === 0 ? `
+                <div class="p-5 text-center text-xs text-gray-400 italic">Nenhuma lição correspondente ao filtro atual.</div>
+              ` : filteredLessons.map(lesson => {
+                const st = statuses[lesson.id] || 'pending';
+                const isBookmark = member.bookmark && member.bookmark.lessonId === lesson.id;
+
+                return `
+                  <div id="lesson-row-${lesson.id}" class="p-4 hover:bg-linen/60 transition flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isBookmark ? 'bg-terracotta/5 border-l-4 border-terracotta' : ''}">
+                    
+                    <!-- Lesson Details -->
+                    <div class="space-y-1 flex-1">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs font-bold text-gray-400">#${lesson.id}</span>
+                        <span class="font-bold text-sm text-azzurro ${st === 'completed' ? 'line-through opacity-70' : ''}">
+                          ${escapeHTML(lesson.title)}
+                        </span>
+                        <span class="bg-azzurro-light text-azzurro text-[10px] font-bold px-2 py-0.5 rounded">${lesson.level}</span>
+                        <span class="bg-gray-100 text-gray-600 text-[10px] font-semibold px-2 py-0.5 rounded">${lesson.duration} min</span>
+                        <span class="bg-gold/20 text-gold-dark text-[10px] font-bold px-2 py-0.5 rounded">${escapeHTML(lesson.category)}</span>
+                        ${isBookmark ? `
+                          <span class="bg-terracotta text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                            <i class="fa-solid fa-bookmark text-gold"></i> ONDE PAREI
+                          </span>
+                        ` : ''}
+                      </div>
+                      ${lesson.notes ? `
+                        <p class="text-xs text-gray-500 italic">
+                          <i class="fa-solid fa-lightbulb text-gold mr-1"></i>${escapeHTML(lesson.notes)}
+                        </p>
+                      ` : ''}
+                    </div>
+
+                    <!-- Controls: 3-State Status Selector + 1-Click Bookmark Button -->
+                    <div class="flex flex-wrap items-center gap-2 self-start xl:self-center shrink-0">
+                      <!-- 3-State Segmented Status Buttons -->
+                      <div class="inline-flex rounded-xl border border-gray-200 bg-linen p-0.5 text-[11px] font-semibold">
+                        <button
+                          onclick="setLessonStatus(${lesson.id}, 'pending')"
+                          class="px-2.5 py-1 rounded-lg transition ${st === 'pending' ? 'bg-gray-600 text-white shadow-sm' : 'text-gray-500 hover:text-azzurro'}"
+                        >
+                          Pendente
+                        </button>
+                        <button
+                          onclick="setLessonStatus(${lesson.id}, 'in_progress')"
+                          class="px-2.5 py-1 rounded-lg transition ${st === 'in_progress' ? 'bg-gold-dark text-white shadow-sm' : 'text-gray-500 hover:text-azzurro'}"
+                        >
+                          Em Andamento
+                        </button>
+                        <button
+                          onclick="setLessonStatus(${lesson.id}, 'completed')"
+                          class="px-2.5 py-1 rounded-lg transition ${st === 'completed' ? 'bg-olive text-white shadow-sm' : 'text-gray-500 hover:text-azzurro'}"
+                        >
+                          Concluído
+                        </button>
+                      </div>
+
+                      <!-- 1-Click Set Bookmark Button -->
+                      <button
+                        onclick="setLessonAsBookmark(${lesson.id})"
+                        title="Marcar esta lição como Onde Parei na sua pasta"
+                        class="text-xs px-3 py-1.5 rounded-xl border font-semibold transition flex items-center gap-1.5 ${isBookmark ? 'bg-terracotta text-white border-terracotta shadow-sm' : 'bg-white hover:bg-terracotta-light text-azzurro border-gold/50'}"
+                      >
+                        <i class="fa-solid fa-map-pin ${isBookmark ? 'text-gold' : 'text-terracotta'}"></i>
+                        <span>${isBookmark ? 'Marcado Aqui' : 'Marcar Onde Parei Aqui'}</span>
+                      </button>
+                    </div>
+
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html || `<div class="bg-white p-8 rounded-2xl text-center text-gray-400 italic border border-gold/30">Nenhuma lição encontrada.</div>`;
+    }
+
+    function setLessonStatus(lessonId, newStatus) {
+      const member = getActiveMember();
+      if (!member.lessonStatuses) member.lessonStatuses = {};
+      member.lessonStatuses[lessonId] = newStatus;
+      saveState();
+
+      const labels = { pending: 'Pendente', in_progress: 'Em Andamento', completed: 'Concluído' };
+      showToast(`Aula #${lessonId} (${member.name}): ${labels[newStatus]}`);
+    }
+
+    function openAddLessonModal() {
+      document.getElementById('modal-add-lesson').classList.remove('hidden');
+    }
+
+    function closeAddLessonModal() {
+      document.getElementById('modal-add-lesson').classList.add('hidden');
+    }
+
+    function saveCustomLesson(e) {
+      e.preventDefault();
+      const member = getActiveMember();
+      if (!member.customLessons) member.customLessons = [];
+
+      const modId = Number(document.getElementById('new-lesson-module').value);
+      const title = document.getElementById('new-lesson-title').value.trim();
+      const level = document.getElementById('new-lesson-level').value;
+      const duration = Number(document.getElementById('new-lesson-duration').value) || 45;
+      const notes = document.getElementById('new-lesson-notes').value.trim();
+
+      const allLessons = getMemberAllLessons(member);
+      const nextId = allLessons.reduce((max, l) => Math.max(max, l.id), 18) + 1;
+
+      member.customLessons.push({
+        id: nextId,
+        moduleId: modId,
+        title,
+        duration,
+        level,
+        category: "Extra",
+        notes
+      });
+
+      saveState();
+      closeAddLessonModal();
+      document.getElementById('new-lesson-title').value = '';
+      document.getElementById('new-lesson-notes').value = '';
+      showToast(`Lição extra adicionada à pasta de ${member.name}!`);
+    }
+
+    // =========================================================================
+    // 5. WEEKLY SCHEDULE (CRONOGRAMA SEMANAL INDIVIDUAL)
+    // =========================================================================
+    function renderSchedule() {
+      const member = getActiveMember();
+      if (!member.schedule || member.schedule.length !== 7) {
+        member.schedule = createDefaultSchedule();
+      }
+
+      const goal = Number(member.weeklyGoalMinutes) || 180;
+      document.getElementById('sched-goal-input').value = goal;
+
+      let plannedMins = 0;
+      let doneMins = 0;
+
+      member.schedule.forEach(dayObj => {
+        if (dayObj.active) {
+          const m = Number(dayObj.minutes) || 0;
+          plannedMins += m;
+          if (dayObj.doneThisWeek) doneMins += m;
+        }
+      });
+
+      const pct = goal > 0 ? Math.min(100, Math.round((doneMins / goal) * 100)) : 0;
+      document.getElementById('sched-done-mins').innerText = `${doneMins} min`;
+      document.getElementById('sched-planned-mins').innerText = `cumpridos de ${plannedMins} min planejados (Meta: ${goal} min)`;
+      document.getElementById('sched-goal-pct').innerText = `${pct}%`;
+      document.getElementById('sched-goal-bar').style.width = `${pct}%`;
+
+      const grid = document.getElementById('schedule-days-grid');
+      grid.innerHTML = member.schedule.map((d, idx) => `
+        <div class="rounded-2xl border p-3.5 flex flex-col justify-between gap-3 transition ${d.active ? 'bg-linen border-gold shadow-sm' : 'bg-gray-50 border-gray-200 opacity-75'}">
+          <div class="space-y-2.5">
+            <!-- Day Header + Active Toggle -->
+            <div class="flex items-center justify-between border-b border-gray-200/80 pb-2">
+              <span class="font-serif font-bold text-sm text-azzurro">${d.fullDay}</span>
+              <label class="inline-flex items-center gap-1 cursor-pointer text-[11px] font-bold ${d.active ? 'text-terracotta' : 'text-gray-400'}">
+                <input type="checkbox" ${d.active ? 'checked' : ''} onchange="toggleScheduleDayActive(${idx})" class="accent-terracotta rounded">
+                <span>Estudar</span>
+              </label>
+            </div>
+
+            ${d.active ? `
+              <!-- Time & Minutes Inputs -->
+              <div class="grid grid-cols-2 gap-1.5">
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-500 uppercase">Horário</label>
+                  <input type="time" value="${d.time || '19:00'}" onchange="updateScheduleDayField(${idx}, 'time', this.value)" class="w-full bg-white border border-gray-300 rounded-lg px-2 py-1 text-xs font-semibold text-azzurro focus:outline-none focus:border-terracotta">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-500 uppercase">Minutos</label>
+                  <input type="number" min="10" max="300" step="5" value="${d.minutes || 45}" onchange="updateScheduleDayField(${idx}, 'minutes', Number(this.value))" class="w-full bg-white border border-gray-300 rounded-lg px-2 py-1 text-xs font-semibold text-azzurro focus:outline-none focus:border-terracotta">
+                </div>
+              </div>
+
+              <!-- Focus Input -->
+              <div>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase">Foco do Dia</label>
+                <input type="text" value="${escapeHTML(d.focus || '')}" onchange="updateScheduleDayField(${idx}, 'focus', this.value)" placeholder="Ex: Gramática / Áudio" class="w-full bg-white border border-gray-300 rounded-lg px-2 py-1.5 text-xs text-azzurro focus:outline-none focus:border-terracotta">
+              </div>
+            ` : `
+              <div class="py-6 text-center text-[11px] text-gray-400 italic">
+                Dia livre / descanso
+              </div>
+            `}
+          </div>
+
+          ${d.active ? `
+            <button
+              onclick="toggleScheduleDayDone(${idx})"
+              class="w-full py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${d.doneThisWeek ? 'bg-olive text-white shadow-sm' : 'bg-white hover:bg-olive-light text-azzurro border border-gray-300'}"
+            >
+              <i class="fa-solid ${d.doneThisWeek ? 'fa-circle-check' : 'fa-circle'}"></i>
+              <span>${d.doneThisWeek ? 'Sessão Concluída' : 'Marcar Feito'}</span>
+            </button>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    function toggleScheduleDayActive(dayIdx) {
+      const member = getActiveMember();
+      const day = member.schedule[dayIdx];
+      day.active = !day.active;
+      if (day.active && (!day.minutes || day.minutes === 0)) {
+        day.minutes = 45;
+        day.time = day.time || "19:30";
+      }
+      saveState();
+    }
+
+    function updateScheduleDayField(dayIdx, field, value) {
+      const member = getActiveMember();
+      member.schedule[dayIdx][field] = value;
+      saveState();
+    }
+
+    function toggleScheduleDayDone(dayIdx) {
+      const member = getActiveMember();
+      member.schedule[dayIdx].doneThisWeek = !member.schedule[dayIdx].doneThisWeek;
+      saveState();
+      showToast(member.schedule[dayIdx].doneThisWeek ? 'Sessão semanal concluída! Ottimo lavoro!' : 'Marcação desfeita.');
+    }
+
+    function updateWeeklyGoal(val) {
+      const member = getActiveMember();
+      member.weeklyGoalMinutes = Math.max(15, Number(val) || 180);
+      saveState();
+      showToast(`Meta semanal atualizada para ${member.weeklyGoalMinutes} min!`);
+    }
+
+    function resetWeeklyChecks() {
+      const member = getActiveMember();
+      member.schedule.forEach(d => d.doneThisWeek = false);
+      saveState();
+      showToast(`Nova semana iniciada na pasta de ${member.name}!`);
+    }
+
+    // =========================================================================
+    // 6. GROUP COMPARATIVE OVERVIEW TAB (VISÃO GERAL DA TURMA)
+    // =========================================================================
+    function renderGroupOverview() {
+      const cardsGrid = document.getElementById('group-cards-grid');
+      const tbody = document.getElementById('group-comparison-tbody');
+
+      cardsGrid.innerHTML = appState.members.map(member => {
+        const stats = calculateMemberStats(member);
+        const allLessons = stats.allLessons;
+        const bmLesson = allLessons.find(l => l.id === member.bookmark.lessonId) || allLessons[0];
+        const isCurrent = member.id === appState.activeMemberId;
+
+        return `
+          <div class="rounded-2xl border-2 p-5 flex flex-col justify-between gap-4 transition ${isCurrent ? 'bg-linen border-terracotta shadow-md' : 'bg-white border-gold/35 shadow-sm'}">
+            <div class="space-y-3">
+              <!-- Card Header -->
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <div class="w-10 h-10 rounded-full text-white font-bold text-sm flex items-center justify-center shrink-0 shadow" style="background-color: ${member.color || '#C85A32'}">
+                    ${escapeHTML(getInitials(member.name))}
+                  </div>
+                  <div class="min-w-0">
+                    <h4 class="font-serif font-bold text-base text-azzurro truncate">${escapeHTML(member.name)}</h4>
+                    <span class="text-[11px] font-semibold text-gray-500">${stats.cefrName}</span>
+                  </div>
+                </div>
+                <span class="badge-cefr text-gold font-bold text-xs px-3 py-1 rounded-lg border border-gold/40">
+                  Nível ${stats.cefr}
+                </span>
+              </div>
+
+              <!-- Progress Bar -->
+              <div>
+                <div class="flex justify-between text-xs font-bold text-azzurro mb-1">
+                  <span>Progresso Geral</span>
+                  <span>${stats.percentage}% (${stats.completedCount}/${stats.totalLessons})</span>
+                </div>
+                <div class="w-full bg-gray-200 h-2.5 rounded-full overflow-hidden">
+                  <div class="h-full rounded-full" style="width: ${stats.percentage}%; background-color: ${member.color || '#C85A32'}"></div>
+                </div>
+              </div>
+
+              <!-- Mini Stats Row -->
+              <div class="grid grid-cols-2 gap-2 text-center bg-white/80 p-2.5 rounded-xl border border-gold/25">
+                <div>
+                  <span class="block text-[10px] uppercase font-bold text-gray-400">Horas Estudadas</span>
+                  <span class="font-serif font-bold text-sm text-azzurro">${stats.completedHours}h</span>
+                </div>
+                <div>
+                  <span class="block text-[10px] uppercase font-bold text-gray-400">Em Andamento</span>
+                  <span class="font-serif font-bold text-sm text-gold-dark">${stats.inProgressCount} aula(s)</span>
+                </div>
+              </div>
+
+              <!-- Where Stopped Box -->
+              <div class="bg-terracotta-light/70 border-l-4 border-terracotta p-3 rounded-r-xl space-y-1">
+                <span class="text-[10px] font-bold uppercase text-terracotta tracking-wider flex items-center gap-1">
+                  <i class="fa-solid fa-bookmark"></i> Onde Parou:
+                </span>
+                <p class="text-xs font-bold text-azzurro">Aula ${bmLesson.id}: ${escapeHTML(bmLesson.title)}</p>
+                <p class="text-[11px] text-terracotta-dark font-semibold">${escapeHTML(member.bookmark.location || '')}</p>
+                ${member.bookmark.note ? `<p class="text-[11px] text-gray-600 italic pt-0.5">"${escapeHTML(member.bookmark.note)}"</p>` : ''}
+              </div>
+            </div>
+
+            <button
+              onclick="selectMemberFolder('${member.id}'); switchTab('lessons');"
+              class="w-full py-2.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 ${isCurrent ? 'bg-azzurro text-white' : 'bg-linen-dark hover:bg-terracotta hover:text-white text-azzurro border border-gold/40'}"
+            >
+              <i class="fa-solid fa-folder-open"></i>
+              <span>${isCurrent ? 'Pasta Aberta Atualmente' : 'Abrir Pasta de ' + escapeHTML(member.name)}</span>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      // Table Rows
+      tbody.innerHTML = appState.members.map(member => {
+        const stats = calculateMemberStats(member);
+        const bmLesson = stats.allLessons.find(l => l.id === member.bookmark.lessonId) || stats.allLessons[0];
+        const isCurrent = member.id === appState.activeMemberId;
+
+        return `
+          <tr class="hover:bg-linen/70 transition ${isCurrent ? 'bg-terracotta/5' : ''}">
+            <td class="py-3 px-4 font-bold text-azzurro whitespace-nowrap">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full shrink-0" style="background-color: ${member.color || '#C85A32'}"></span>
+                <span>${escapeHTML(member.name)}</span>
+              </div>
+            </td>
+            <td class="py-3 px-3 text-center">
+              <span class="bg-azzurro text-gold font-bold px-2.5 py-0.5 rounded-full text-[11px]">${stats.cefr}</span>
+            </td>
+            <td class="py-3 px-4 min-w-[140px]">
+              <div class="flex items-center gap-2">
+                <div class="flex-1 bg-gray-200 h-2 rounded-full overflow-hidden">
+                  <div class="h-full rounded-full" style="width: ${stats.percentage}%; background-color: ${member.color || '#C85A32'}"></div>
+                </div>
+                <span class="font-bold text-azzurro w-9 text-right">${stats.percentage}%</span>
+              </div>
+            </td>
+            <td class="py-3 px-3 text-center font-semibold text-gray-700">${stats.completedCount}/${stats.totalLessons}</td>
+            <td class="py-3 px-3 text-center font-bold text-olive-dark">${stats.completedHours}h</td>
+            <td class="py-3 px-4">
+              <div class="font-bold text-azzurro">Aula ${bmLesson.id}: ${escapeHTML(bmLesson.title)}</div>
+              <div class="text-[11px] text-terracotta">${escapeHTML(member.bookmark.location || '')}</div>
+            </td>
+            <td class="py-3 px-3 text-right whitespace-nowrap">
+              <button onclick="selectMemberFolder('${member.id}'); switchTab('lessons');" class="bg-linen-dark hover:bg-terracotta hover:text-white text-azzurro font-semibold px-3 py-1.5 rounded-lg border border-gold/40 transition">
+                Acessar
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // =========================================================================
+    // 7. GLOSSARY & AUDIO PRONUNCIATION (it-IT)
+    // =========================================================================
+    function renderVocabulary() {
+      const container = document.getElementById('vocab-grid');
+      const searchVal = (document.getElementById('vocab-search').value || '').toLowerCase();
+      const catFilter = document.getElementById('vocab-category-filter').value;
+
+      let list = appState.vocabulary || [];
+      if (searchVal) {
+        list = list.filter(v => v.italian.toLowerCase().includes(searchVal) || v.portuguese.toLowerCase().includes(searchVal));
+      }
+      if (catFilter !== 'ALL') {
+        list = list.filter(v => v.category === catFilter);
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="col-span-full bg-white p-8 rounded-2xl text-center border border-gold/30 text-gray-400 italic">Nenhuma expressão encontrada.</div>`;
+        return;
+      }
+
+      container.innerHTML = list.map(item => `
+        <div class="bg-white p-5 rounded-2xl border border-gold/30 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3">
+          <div>
+            <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+              <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-terracotta/10 text-terracotta">
+                ${escapeHTML(item.category || 'Vocabulário')}
+              </span>
+              <button onclick="speakItalian(${JSON.stringify(item.italian)})" title="Ouvir pronúncia em italiano" class="w-8 h-8 rounded-full bg-gold/25 hover:bg-terracotta hover:text-white text-azzurro flex items-center justify-center text-xs transition shadow-sm">
+                <i class="fa-solid fa-volume-high"></i>
+              </button>
+            </div>
+
+            <div class="mt-3">
+              <h4 class="text-lg font-serif font-bold text-azzurro">${escapeHTML(item.italian)}</h4>
+              <p class="text-xs text-terracotta font-semibold mt-0.5">${escapeHTML(item.portuguese)}</p>
+            </div>
+
+            ${item.example ? `
+              <div class="bg-linen p-2.5 rounded-xl mt-3 text-xs italic text-gray-600 border-l-2 border-gold flex items-start justify-between gap-2">
+                <span>"${escapeHTML(item.example)}"</span>
+                <button onclick="speakItalian(${JSON.stringify(item.example)})" title="Ouvir frase de exemplo" class="text-azzurro/60 hover:text-terracotta shrink-0">
+                  <i class="fa-solid fa-play"></i>
+                </button>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="flex justify-end pt-1">
+            <button onclick="deleteVocab(${item.id})" title="Remover do glossário" class="text-xs text-gray-400 hover:text-red-500 transition">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function speakItalian(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'it-IT';
+        utterance.rate = 0.92;
+        window.speechSynthesis.speak(utterance);
+        showToast(`Pronunciando em italiano: "${text}" 🇮🇹`);
+      } else {
+        showToast('Seu navegador não suporta síntese de voz.');
+      }
+    }
+
+    function openAddVocabModal() {
+      document.getElementById('modal-add-vocab').classList.remove('hidden');
+    }
+
+    function closeAddVocabModal() {
+      document.getElementById('modal-add-vocab').classList.add('hidden');
+    }
+
+    function saveCustomVocab(e) {
+      e.preventDefault();
+      appState.vocabulary.unshift({
+        id: Date.now(),
+        italian: document.getElementById('new-vocab-italian').value.trim(),
+        portuguese: document.getElementById('new-vocab-portuguese').value.trim(),
+        category: document.getElementById('new-vocab-category').value,
+        example: document.getElementById('new-vocab-example').value.trim()
+      });
+      saveState();
+      closeAddVocabModal();
+      document.getElementById('new-vocab-italian').value = '';
+      document.getElementById('new-vocab-portuguese').value = '';
+      document.getElementById('new-vocab-example').value = '';
+      showToast('Expressão salva no glossário!');
+    }
+
+    function deleteVocab(id) {
+      appState.vocabulary = appState.vocabulary.filter(v => v.id !== id);
+      saveState();
+      showToast('Item removido do glossário.');
+    }
+
+    // =========================================================================
+    // 8. INDIVIDUAL NOTES & TASKS (CADERNO DA PASTA ATIVA)
+    // =========================================================================
+    function renderNotes() {
+      const member = getActiveMember();
+      const container = document.getElementById('notes-grid');
+      const list = member.notes || [];
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="col-span-full bg-white p-8 rounded-2xl text-center border border-gold/30 text-gray-400 italic">Nenhuma anotação pessoal na pasta de ${escapeHTML(member.name)} ainda.</div>`;
+        return;
+      }
+
+      const catBadges = {
+        'Tarefa': 'bg-terracotta-light text-terracotta border-terracotta/30',
+        'Dúvida': 'bg-amber-100 text-amber-800 border-amber-200',
+        'Recurso': 'bg-azzurro-light text-azzurro border-azzurro/20',
+        'Geral': 'bg-olive-light text-olive-dark border-olive/30'
+      };
+
+      container.innerHTML = list.map(note => `
+        <div class="bg-white p-5 rounded-2xl border border-gold/30 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3 ${note.completed ? 'opacity-75 bg-linen/50' : ''}">
+          <div>
+            <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+              <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${catBadges[note.category] || catBadges['Geral']}">
+                ${escapeHTML(note.category)}
+              </span>
+              <span class="text-[11px] text-gray-400">${escapeHTML(note.date || '')}</span>
+            </div>
+
+            <div class="flex items-start gap-2.5 mt-3">
+              <input type="checkbox" ${note.completed ? 'checked' : ''} onchange="toggleNoteCompleted(${note.id})" class="mt-1 w-4 h-4 accent-olive rounded cursor-pointer">
+              <div>
+                <h4 class="text-base font-serif font-bold text-azzurro ${note.completed ? 'line-through text-gray-400' : ''}">
+                  ${escapeHTML(note.title)}
+                </h4>
+                <p class="text-xs text-gray-600 mt-1.5 whitespace-pre-line">${escapeHTML(note.text)}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end pt-2 border-t border-gray-100">
+            <button onclick="deleteNote(${note.id})" class="text-xs text-gray-400 hover:text-red-500 transition flex items-center gap-1">
+              <i class="fa-solid fa-trash-can"></i> Excluir
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openAddNoteModal() {
+      document.getElementById('modal-add-note').classList.remove('hidden');
+    }
+
+    function closeAddNoteModal() {
+      document.getElementById('modal-add-note').classList.add('hidden');
+    }
+
+    function saveCustomNote(e) {
+      e.preventDefault();
+      const member = getActiveMember();
+      if (!member.notes) member.notes = [];
+
+      member.notes.unshift({
+        id: Date.now(),
+        title: document.getElementById('new-note-title').value.trim(),
+        category: document.getElementById('new-note-category').value,
+        text: document.getElementById('new-note-text').value.trim(),
+        completed: false,
+        date: new Date().toLocaleDateString('pt-BR')
+      });
+
+      saveState();
+      closeAddNoteModal();
+      document.getElementById('new-note-title').value = '';
+      document.getElementById('new-note-text').value = '';
+      showToast(`Anotação salva na pasta de ${member.name}!`);
+    }
+
+    function toggleNoteCompleted(noteId) {
+      const member = getActiveMember();
+      const note = (member.notes || []).find(n => n.id === noteId);
+      if (note) {
+        note.completed = !note.completed;
+        saveState();
+      }
+    }
+
+    function deleteNote(noteId) {
+      const member = getActiveMember();
+      member.notes = (member.notes || []).filter(n => n.id !== noteId);
+      saveState();
+      showToast('Anotação removida.');
+    }
+
+    // =========================================================================
+    // 9. MEMBER FOLDER CRUD (ADICIONAR, RENOMEAR, EXCLUIR PASTA)
+    // =========================================================================
+    function openAddMemberModal() {
+      document.getElementById('member-modal-mode').value = 'add';
+      document.getElementById('modal-member-title').innerHTML = `<i class="fa-solid fa-folder-plus text-terracotta"></i> Nova Pasta de Integrante`;
+      document.getElementById('member-name-input').value = '';
+      const firstRadio = document.querySelector('input[name="memberColor"]');
+      if (firstRadio) firstRadio.checked = true;
+      document.getElementById('modal-member').classList.remove('hidden');
+    }
+
+    function openRenameMemberModal() {
+      const member = getActiveMember();
+      document.getElementById('member-modal-mode').value = 'rename';
+      document.getElementById('modal-member-title').innerHTML = `<i class="fa-solid fa-pen text-terracotta"></i> Renomear Pasta Ativa`;
+      document.getElementById('member-name-input').value = member.name;
+      const radios = document.querySelectorAll('input[name="memberColor"]');
+      radios.forEach(r => { r.checked = (r.value === member.color); });
+      document.getElementById('modal-member').classList.remove('hidden');
+    }
+
+    function closeMemberModal() {
+      document.getElementById('modal-member').classList.add('hidden');
+    }
+
+    function saveMemberFolder(e) {
+      e.preventDefault();
+      const mode = document.getElementById('member-modal-mode').value;
+      const name = document.getElementById('member-name-input').value.trim();
+      const colorRadio = document.querySelector('input[name="memberColor"]:checked');
+      const color = colorRadio ? colorRadio.value : '#C85A32';
+
+      if (!name) return;
+
+      if (mode === 'add') {
+        const newId = `member-${Date.now()}`;
+        const newMember = {
+          id: newId,
+          name,
+          color,
+          weeklyGoalMinutes: 180,
+          bookmark: {
+            lessonId: 1,
+            location: "Início da Aula 1: L'Alfabeto e la Pronuncia Italiana",
+            note: `Pasta individual criada para ${name}. Buon studio!`,
+            updatedAt: new Date().toISOString()
+          },
+          lessonStatuses: {},
+          customLessons: [],
+          schedule: createDefaultSchedule(),
+          notes: []
+        };
+        appState.members.push(newMember);
+        appState.activeMemberId = newId;
+        saveState();
+        closeMemberModal();
+        showToast(`Pasta individual criada para "${name}"!`);
+      } else {
+        const member = getActiveMember();
+        member.name = name;
+        member.color = color;
+        saveState();
+        closeMemberModal();
+        showToast(`Pasta renomeada para "${name}"!`);
+      }
+    }
+
+    function openDeleteMemberModal() {
+      if (appState.members.length <= 1) {
+        showToast('É necessário manter pelo menos 1 pasta ativa no painel.');
+        return;
+      }
+      const member = getActiveMember();
+      openConfirmModal(
+        'Excluir Pasta Individual',
+        `Deseja realmente excluir a pasta "${member.name}" e todo o histórico individual dela? As pastas dos outros integrantes não serão afetadas.`,
+        () => {
+          appState.members = appState.members.filter(m => m.id !== member.id);
+          appState.activeMemberId = appState.members[0].id;
+          saveState();
+          showToast(`Pasta "${member.name}" excluída.`);
+        }
+      );
+    }
+
+    // =========================================================================
+    // 10. SMART SYNC (INDIVIDUAL FOLDER MERGE, BACKUP & CSV EXPORT)
+    // =========================================================================
+    function openSyncModal() {
+      const member = getActiveMember();
+      document.getElementById('sync-active-member-badge').innerText = member.name;
+      document.getElementById('sync-paste-input').value = '';
+      document.getElementById('modal-sync').classList.remove('hidden');
+    }
+
+    function closeSyncModal() {
+      document.getElementById('modal-sync').classList.add('hidden');
+    }
+
+    function buildActiveMemberExportPayload() {
+      const member = getActiveMember();
+      return {
+        type: "firenze_member_folder",
+        exportedAt: new Date().toISOString(),
+        member: JSON.parse(JSON.stringify(member))
+      };
+    }
+
+    function exportActiveMemberFolder() {
+      const payload = buildActiveMemberExportPayload();
+      const safeName = payload.member.name.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `pasta_italiano_${safeName}_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast(`Arquivo da pasta de "${payload.member.name}" baixado!`);
+    }
+
+    function copyActiveMemberJSON() {
+      const payload = buildActiveMemberExportPayload();
+      const text = JSON.stringify(payload);
+      const temp = document.createElement('textarea');
+      temp.value = text;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      temp.remove();
+      showToast(`Código JSON da pasta de "${payload.member.name}" copiado!`);
+    }
+
+    function processImportedJSONString(rawText) {
+      try {
+        const parsed = JSON.parse(rawText);
+
+        // Case 1: Single Member Folder Export (Smart Merge without overwriting others!)
+        if (parsed && parsed.type === "firenze_member_folder" && parsed.member && parsed.member.id) {
+          const incoming = parsed.member;
+          const existingIndex = appState.members.findIndex(m => m.id === incoming.id);
+          if (existingIndex >= 0) {
+            appState.members[existingIndex] = incoming;
+            showToast(`Pasta de "${incoming.name}" atualizada! Os demais membros foram preservados.`);
+          } else {
+            appState.members.push(incoming);
+            showToast(`Nova pasta de "${incoming.name}" adicionada ao grupo!`);
+          }
+          saveState();
+          closeSyncModal();
+          return;
+        }
+
+        // Case 2: Full Workspace Backup
+        if (parsed && Array.isArray(parsed.members) && parsed.members.length > 0) {
+          appState = parsed;
+          if (!appState.members.some(m => m.id === appState.activeMemberId)) {
+            appState.activeMemberId = appState.members[0].id;
+          }
+          saveState();
+          closeSyncModal();
+          showToast('Backup completo restaurado com sucesso!');
+          return;
+        }
+
+        showToast('Formato JSON não reconhecido. Verifique o arquivo selecionado.');
+      } catch (err) {
+        showToast('Erro ao ler o JSON. Certifique-se de que o arquivo está íntegro.');
+      }
+    }
+
+    function handleImportFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        processImportedJSONString(e.target.result);
+        event.target.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    function handleImportPastedJSON() {
+      const raw = document.getElementById('sync-paste-input').value.trim();
+      if (!raw) {
+        showToast('Cole o código JSON antes de clicar em Mesclar.');
+        return;
+      }
+      processImportedJSONString(raw);
+    }
+
+    function exportFullBackup() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `firenze_study_hub_backup_completo_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('Backup completo de todas as pastas baixado!');
+    }
+
+    function exportCSV() {
+      const csvEscape = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
+      const rows = [];
+
+      // Header 1: Resumo Comparativo por Membro
+      rows.push([
+        "Integrante", "Nível CEFR", "Progresso (%)", "Aulas Concluídas",
+        "Aulas Em Andamento", "Total de Aulas", "Horas Estudadas",
+        "Meta Semanal (min)", "Onde Parou (Lição)", "Ponto Exato de Parada", "Observação Onde Parou"
+      ].map(csvEscape).join(","));
+
+      appState.members.forEach(member => {
+        const stats = calculateMemberStats(member);
+        const bmLesson = stats.allLessons.find(l => l.id === member.bookmark.lessonId) || stats.allLessons[0];
+        rows.push([
+          member.name,
+          stats.cefr,
+          `${stats.percentage}%`,
+          stats.completedCount,
+          stats.inProgressCount,
+          stats.totalLessons,
+          `${stats.completedHours}h`,
+          member.weeklyGoalMinutes || 180,
+          `Aula ${bmLesson.id}: ${bmLesson.title}`,
+          member.bookmark.location || '',
+          member.bookmark.note || ''
+        ].map(csvEscape).join(","));
+      });
+
+      rows.push("");
+      rows.push(["DETALHAMENTO POR LIÇÃO E INTEGRANTE"].map(csvEscape).join(","));
+
+      // Header 2: Matriz de Status por Lição
+      const memberHeaders = appState.members.map(m => `${m.name} (Status)`);
+      rows.push(["ID", "Módulo", "Nível", "Lição", "Duração (min)", ...memberHeaders].map(csvEscape).join(","));
+
+      const statusPt = { completed: "Concluído", in_progress: "Em Andamento", pending: "Pendente" };
+      BASE_LESSONS.forEach(lesson => {
+        const statusesPerMember = appState.members.map(m => statusPt[(m.lessonStatuses || {})[lesson.id] || 'pending']);
+        rows.push([
+          lesson.id,
+          MODULES_INFO[lesson.moduleId].title,
+          lesson.level,
+          lesson.title,
+          lesson.duration,
+          ...statusesPerMember
+        ].map(csvEscape).join(","));
+      });
+
+      const csvContent = "\uFEFF" + rows.join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `corso_italiano_turma_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast('Planilha CSV gerada para Google Sheets!');
+    }
+
+    // =========================================================================
+    // 11. TAB SWITCHING, CUSTOM CONFIRMATION & TOASTS
+    // =========================================================================
+    function switchTab(tabName) {
+      currentTab = tabName;
+      const tabs = ['lessons', 'schedule', 'group', 'vocabulary', 'notes'];
+      tabs.forEach(t => {
+        const sec = document.getElementById(`tab-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (t === tabName) {
+          sec.classList.remove('hidden');
+          btn.className = "py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 bg-terracotta text-white shadow-sm whitespace-nowrap transition";
+        } else {
+          sec.classList.add('hidden');
+          btn.className = "py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 bg-white text-azzurro hover:bg-gold-light border border-gold/30 whitespace-nowrap transition";
+        }
+      });
+    }
+
+    let pendingConfirmCallback = null;
+
+    function openConfirmModal(title, message, onConfirm) {
+      document.getElementById('confirm-modal-title').innerText = title;
+      document.getElementById('confirm-modal-message').innerText = message;
+      pendingConfirmCallback = onConfirm;
+      document.getElementById('modal-confirm').classList.remove('hidden');
+    }
+
+    function closeConfirmModal() {
+      pendingConfirmCallback = null;
+      document.getElementById('modal-confirm').classList.add('hidden');
+    }
+
+    document.getElementById('confirm-modal-btn').addEventListener('click', function() {
+      if (typeof pendingConfirmCallback === 'function') {
+        pendingConfirmCallback();
+      }
+      closeConfirmModal();
+    });
+
+    function openResetConfirmModal() {
+      openConfirmModal(
+        'Restaurar Dados Originais',
+        'Deseja restaurar as 3 pastas de demonstração, lições e marcadores para a configuração padrão?',
+        () => {
+          appState = JSON.parse(JSON.stringify(INITIAL_STATE));
+          saveState();
+          showToast('Dashboard restaurado para a configuração inicial!');
+        }
+      );
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'bg-azzurro text-white font-medium text-xs px-4 py-3 rounded-xl shadow-lg border border-gold flex items-center gap-2 transform transition-all duration-300 translate-y-full opacity-0 pointer-events-auto';
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-gold"></i> <span>${escapeHTML(message)}</span>`;
+
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-full', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3400);
+    }
+  </script>
+</body>
+</html>

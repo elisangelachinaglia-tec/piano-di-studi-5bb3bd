@@ -1,0 +1,308 @@
+{
+  "bookmark": {
+    "lessonId": 8,
+    "moduleTitle": "Módulo 2: Vita Quotidiana",
+    "lessonTitle": "Aula 8: Il Passato Prossimo con Avere",
+    "location": "Pág. 54, Exercício 3 (Vídeo em 14:20)",
+    "note": "Paramos na explicação do particípio passado regular. Fazer os 5 exercícios restantes da página 55 para a próxima aula!",
+    "updatedBy": "Turma de Italiano",
+    "updatedAt": "2026-11-10T21:48:48.431Z"
+  },
+  "lessons": [
+    {
+      "id": 1,
+      "moduleId": 1,
+      "moduleName": "Módulo 1: Primi Passi",
+      "title": "L'Alfabeto e la Pronuncia Italiana (C, G, SC, GLI)",
+      "duration": "45 min",
+      "level": "A1",
+      "category": "Gramática",
+      "completed": true,
+      "notes": "Atenção às diferenças de pronúncia antes de E/I."
+    },
+    {
+      "id": 2,
+      "moduleId": 2,
+      "moduleName": "Módulo 1: Primi Passi",
+      "title": "Saluti e Presentazioni (Formal vs Informal)",
+      "duration": "40 min",
+      "level": "A1",
+      "category": "Conversação",
+      "completed": true,
+      "notes": "Uso do Lei (respeito) e Tu (amigos)."
+    },
+    {
+      "id": 3,
+      "moduleId": 1,
+      "moduleName": "Módulo 1: Primi Passi",
+      "title": "Verbi Essere e Avere al Presente Indicativo",
+      "duration": "60 min",
+      "level": "A1",
+      "category": "Gramática",
+      "completed": true,
+      "notes": "Essencial memorizar todas as formas irregulares."
+    },
+    {
+      "id": 4,
+      "moduleId": 1,
+      "moduleName": "Módulo 1: Primi Passi",
+      "title": "I Numeri da 0 a 100 e i Giorni della Settimana",
+      "duration": "50 min",
+      "level": "A1",
+      "category": "Vocabulário",
+      "completed": true,
+      "notes": "Treinar pronúncia dos numerais com consoantes duplas."
+    },
+    {
+      "id": 5,
+      "moduleId": 1,
+      "moduleName": "Módulo 1: Primi Passi",
+      "title": "Genere e Numero dei Nomi (Singolare e Plurale)",
+      "duration": "55 min",
+      "level": "A1",
+      "category": "Gramática",
+      "completed": true,
+      "notes": "Plurais gerais: -o -> -i, -a -> -e, -e -> -i."
+    },
+    {
+      "id": 6,
+      "moduleId": 2,
+      "moduleName": "Módulo 2: Vita Quotidiana",
+      "title": "Gli Articoli Determinativi e Indeterminativi",
+      "duration": "50 min",
+      "level": "A2",
+      "category": "Gramática",
+      "completed": true,
+      "notes": "Regras especiais para 'lo', 'gli', 'uno'."
+    },
+    {
+      "id": 7,
+      "moduleId": 2,
+      "moduleName": "Módulo 2: Vita Quotidiana",
+      "title": "Verbi Regolari al Presente (-ARE, -ERE, -IRE)",
+      "duration": "60 min",
+      "level": "A2",
+      "category": "Gramática",
+      "completed": true,
+      "notes": "Incluso verbos em -ISC como capire e preferire."
+    },
+    {
+      "id": 8,
+      "moduleId": 2,
+      "moduleName": "Módulo 2: Vita Quotidiana",
+      "title": "Il Passato Prossimo con Avere",
+      "duration": "65 min",
+      "level": "A2",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Estrutura auxiliar Avere + Participio Passato."
+    },
+    {
+      "id": 9,
+      "moduleId": 2,
+      "moduleName": "Módulo 2: Vita Quotidiana",
+      "title": "Il Passato Prossimo con Essere e Concordanza",
+      "duration": "70 min",
+      "level": "A2",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Verbos de movimento, mudança de estado e reflexivos."
+    },
+    {
+      "id": 10,
+      "moduleId": 2,
+      "moduleName": "Módulo 2: Vita Quotidiana",
+      "title": "Le Preposizioni Semplici e Articolate (di, a, da, in, con, su...)",
+      "duration": "80 min",
+      "level": "A2",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Combinações com artigos (es: in + il = nel)."
+    },
+    {
+      "id": 11,
+      "moduleId": 2,
+      "moduleName": "Módulo 2: Vita Quotidiana",
+      "title": "Ordinare al Bar e al Ristorante (Dialoghi)",
+      "duration": "45 min",
+      "level": "A2",
+      "category": "Conversação",
+      "completed": false,
+      "notes": "Expressões: Vorrei..., Per me..., Il conto per favore."
+    },
+    {
+      "id": 12,
+      "moduleId": 3,
+      "moduleName": "Módulo 3: Raccontare il Passato",
+      "title": "L'Imperfetto Indicativo (Abitudini e Descrizioni)",
+      "duration": "60 min",
+      "level": "B1",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Quando ero piccolo... C'era una volta..."
+    },
+    {
+      "id": 13,
+      "moduleId": 3,
+      "moduleName": "Módulo 3: Raccontare il Passato",
+      "title": "Passato Prossimo vs Imperfetto (Uso Combinato)",
+      "duration": "75 min",
+      "level": "B1",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Ação concluída versus estado em andamento no passado."
+    },
+    {
+      "id": 14,
+      "moduleId": 3,
+      "moduleName": "Módulo 3: Raccontare il Passato",
+      "title": "I Pronomi Diretti e Indiretti (mi, ti, lo, la, ci, vi...)",
+      "duration": "70 min",
+      "level": "B1",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Substituição de nomes para fluência."
+    },
+    {
+      "id": 15,
+      "moduleId": 3,
+      "moduleName": "Módulo 3: Raccontare il Passato",
+      "title": "Pronomi Combinati e le Particelle CI e NE",
+      "duration": "65 min",
+      "level": "B1",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Ne ho tre / Ci vado domani."
+    },
+    {
+      "id": 16,
+      "moduleId": 4,
+      "moduleName": "Módulo 4: Il Futuro e il Condizionale",
+      "title": "Il Futuro Semplice e Composto",
+      "duration": "60 min",
+      "level": "B2",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Previsões, hipóteses no presente e projetos futuros."
+    },
+    {
+      "id": 17,
+      "moduleId": 4,
+      "moduleName": "Módulo 4: Il Futuro e il Condizionale",
+      "title": "Il Condizionale Semplice (Desideri e Cortesia)",
+      "duration": "65 min",
+      "level": "B2",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Vorrei un caffè / Mi piacerebbe visitare Firenze."
+    },
+    {
+      "id": 18,
+      "moduleId": 4,
+      "moduleName": "Módulo 4: Il Futuro e il Condizionale",
+      "title": "Il Condizionale Composto (Ipotesi del Passato)",
+      "duration": "60 min",
+      "level": "B2",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Avrei voluto studiare di più."
+    },
+    {
+      "id": 19,
+      "moduleId": 5,
+      "moduleName": "Módulo 5: Livello Avanzato",
+      "title": "Il Congiuntivo Presente e Passato",
+      "duration": "80 min",
+      "level": "C1",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Expressão de opiniões, desejos e dúvidas: Penso che..."
+    },
+    {
+      "id": 20,
+      "moduleId": 5,
+      "moduleName": "Módulo 5: Livello Avanzato",
+      "title": "Il Congiuntivo Imperfetto e Trapassato",
+      "duration": "85 min",
+      "level": "C1",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Estruturas hipotéticas complexas."
+    },
+    {
+      "id": 21,
+      "moduleId": 5,
+      "moduleName": "Módulo 5: Livello Avanzato",
+      "title": "Periodo Ipotetico (Realtà, Possibilità, Impossibilità)",
+      "duration": "75 min",
+      "level": "C2",
+      "category": "Gramática",
+      "completed": false,
+      "notes": "Construções sintáticas avançadas com Se..."
+    },
+    {
+      "id": 22,
+      "moduleId": 5,
+      "moduleName": "Módulo 5: Livello Avanzato",
+      "title": "Modi di Dire e Espressioni Idiomatiche Fiorentine",
+      "duration": "60 min",
+      "level": "C2",
+      "category": "Cultura",
+      "completed": false,
+      "notes": "Expressões regionais e cultura toscana."
+    }
+  ],
+  "vocabulary": [
+    {
+      "id": 1,
+      "italian": "In bocca al lupo!",
+      "portuguese": "Boa sorte! (Resposta: Crepi il lupo!)",
+      "category": "Expressão",
+      "example": "Domani ho l'esame di italiano. - In bocca al lupo!"
+    },
+    {
+      "id": 2,
+      "italian": "Piacere di conoscerti",
+      "portuguese": "Prazer em te conhecer",
+      "category": "Conversação",
+      "example": "Ciao, sono Marco. Piacere di conoscerti!"
+    },
+    {
+      "id": 3,
+      "italian": "Fare una passeggiata",
+      "portuguese": "Dar um passeio a pé",
+      "category": "Verbo",
+      "example": "Andiamo a fare una passeggiata lungo il fiume Arno?"
+    },
+    {
+      "id": 4,
+      "italian": "Chiaro di luna",
+      "portuguese": "Luar / Luz da lua",
+      "category": "Vocabulário",
+      "example": "Ponte Vecchio è bellissima al chiaro di luna."
+    },
+    {
+      "id": 5,
+      "italian": "Comunque",
+      "portuguese": "De qualquer forma / No entanto",
+      "category": "Gramática",
+      "example": "Piove, ma comunque noi usciamo."
+    }
+  ],
+  "notes": [
+    {
+      "id": 1,
+      "title": "Tarefas de Casa para a Próxima Aula",
+      "text": "Ler o texto sobre a história de Florença na pág. 55 e responder aos 5 exercícios de fixação.",
+      "category": "Tarefa",
+      "date": "2026-11-08"
+    },
+    {
+      "id": 2,
+      "title": "Dicionário Online Recomendado",
+      "text": "Usar o Treccani (treccani.it) ou WordReference para verificar frases contextuais e tabelas de conjugação.",
+      "category": "Recurso",
+      "date": "2026-11-05"
+    }
+  ]
+}
